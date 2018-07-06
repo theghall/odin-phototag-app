@@ -106,7 +106,19 @@ const phototag = {
     getElapsedTime: () => state.elapsedTime,
   }),
 
+  timed: (state) => (
+    state.timerID = setTimeout(function() { 
+      state.phase = 'over';
+      state.timedSuccess = false;
+      state.elapsedTime = state.challengeTime;
+      state.gameStatus = 'You failed to complete the challenge on time';
+    },
+    state.challengeTime)
+  ),
+
   createChallengeController(picBoard, challengeTime = null) {
+    let controller = null;
+
     const state = {
       picBoard: picBoard,
       phase: 'playing',
@@ -118,17 +130,14 @@ const phototag = {
       timedSuccess: false
     }
 
-    if (challengeTime !== null) {
-      state.timerId = setTimeout(function() { 
-        state.phase = 'over';
-        state.timedSuccess = false;
-        state.elapsedTime = challengeTime;
-        state.gameStatus = 'You failed to complete the challenge on time';
-      },
-      challengeTime);
+    if (challengeTime === null) {
+      controller = Object.assign({}, phototag.phaseable(state), phototag.playable(state));
+    } else {
+      controller = Object.assign({}, phototag.phaseable(state), phototag.playable(state), phototag.timed(state));
     }
 
-    return Object.assign({}, phototag.phaseable(state), phototag.playable(state));
+    return controller;
+
   },
 
 };
