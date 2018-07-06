@@ -138,18 +138,23 @@ describe('Testing pictureBoard....', () => {
     const itemArr = [];
     const picBoard = phototag.createPictureBoard();
     picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
+    // Need to save this for later mock of Date.now
+    const controllerCreated = Date.now();
     const controller = phototag.createChallengeController(picBoard, null);
+    // Need to do this just before last item is clicked
+    Date.now = jest.fn().mockImplementation(function() { return controllerCreated + 5000; });
     controller.clickPicture({x: 2, y: 2});
     expect(controller.getState()).toMatch('over');
     expect(controller.getStatus()).toMatch(/finished/i);
+    expect(controller.getStatus()).toMatch(/5\.0/i);
   });
 
   test('It should report correct status and state when challenge is completed before time expires on a timed challenge', () => {
     jest.useFakeTimers();
     const picBoard = phototag.createPictureBoard();
     picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
-    const challengeTime = 30000;
-    const completedTime = 20000;
+    const challengeTime = 3000;
+    const completedTime = 2000;
     const controller = phototag.createChallengeController(picBoard, challengeTime);
     jest.advanceTimersByTime(completedTime);
     controller.clickPicture({x: 2, y: 2});

@@ -95,7 +95,7 @@ const phototag = {
       if (state.picBoard.allItemsClicked()) {
         state.elapsedTime = Date.now() - state.timeStart;
         state.phase = 'over';
-        state.gameStatus = `You finished in ${state.elapsedTime/1000} seconds`
+        state.gameStatus = `You finished in ${(state.elapsedTime/1000).toFixed(1)} seconds`
 
         if (state.challengeTime !== null) {
           state.timedSuccess = true;
