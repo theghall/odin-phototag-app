@@ -174,4 +174,13 @@ describe('Testing pictureBoard....', () => {
     expect(controller.getState()).toMatch('over');
     expect(controller.getStatus()).toMatch(/failed/i);
   });
+
+  test('It should throw an error if click is called after game is over', () => {
+    const picBoard = phototag.createPictureBoard();
+    picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
+    const controller = phototag.createChallengeController(picBoard, null);
+    controller.clickPicture({x: 2, y: 2});
+    expect(controller.getState()).toMatch('over');
+    expect(() => controller.clickPicture({x: 2, y: 2})).toThrow();
+  });
 });

@@ -91,6 +91,10 @@ const phototag = {
 
   playable: state => ({
     clickPicture: (coords) => {
+      if (state.phase !== 'playing') {
+        throw('Clicked was called when game was not being played');
+      }
+
       state.picBoard.click(coords);
       if (state.picBoard.allItemsClicked()) {
         state.elapsedTime = Date.now() - state.timeStart;
