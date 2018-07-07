@@ -74,6 +74,18 @@ describe('Testing pictureBoard....', () => {
     }
   });
 
+  test('it should return item clicked', () => {
+    const picBoard = phototag.createPictureBoard();
+    picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
+    expect(picBoard.click({x: 2, y: 2})).toMatch("item1");
+  });
+
+  test('it should return null if no item clicked', () => {
+    const picBoard = phototag.createPictureBoard();
+    picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
+    expect(picBoard.click({x: 5, y: 5})).toBeNull();
+  });
+
   test('It should report all items clicked', () => {
     const itemArr = [];
 

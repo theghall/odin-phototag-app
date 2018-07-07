@@ -55,10 +55,17 @@ const phototag = {
 
   clickableBoard: (state, helpers) => ({
     click: (coords) => {
+      let itemClicked = null;
+
       for (let i = 0; i < state.items.length; i += 1) {
         state.items[i].click(coords)
+        if (state.items[i].clicked()) {
+          itemClicked = state.items[i].getName();
+        }
       }
       helpers.updateAllItemsClicked(state);
+
+      return itemClicked;
     },
     allItemsClicked: () => state.allItemsClicked,
   }),
