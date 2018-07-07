@@ -61,16 +61,23 @@ const phototag = {
         state.items[i].click(coords)
         if (state.items[i].clicked()) {
           itemClicked = state.items[i].getName();
+          helpers.updateItemsClicked(itemClicked, state);
         }
       }
       helpers.updateAllItemsClicked(state);
 
       return itemClicked;
     },
+    getItemsClicked: () => state.itemsClicked.toString(),
     allItemsClicked: () => state.allItemsClicked,
   }),
 
   boardHelpers: {
+    updateItemsClicked: (itemName, state) => {
+      if (state.itemsClicked.indexOf(itemName) === -1) {
+        state.itemsClicked.push(itemName);
+      }
+    },
     updateAllItemsClicked: (state) => {
       const clicked = [];
 
@@ -85,6 +92,7 @@ const phototag = {
   createPictureBoard() {
     const state = {
       items: [],
+      itemsClicked: [],
       allItemsClicked: false
     }
 
