@@ -1,13 +1,13 @@
 const phototag = require('../src/phototag');
 
-function getTestItem(name = "abcd", bottomLeftX, bottomLeftY, side) {
+function getTestItem(name = "abcd", topLeftX, topLeftY, side) {
   const item = {};
 
   item.name = name;
-  item.bottom_left_loc = `${bottomLeftX}, ${bottomLeftY}`
-  item.top_left_loc = `${bottomLeftX}, ${bottomLeftY + side}`
-  item.top_right_loc = `${bottomLeftX + side}, ${bottomLeftY + side}`
-  item.bottom_right_loc = `${bottomLeftX + side}, ${bottomLeftY}`
+  item.top_left_loc = `${topLeftX}, ${topLeftY}`
+  item.top_right_loc = `${topLeftX + side}, ${topLeftY}`
+  item.bottom_right_loc = `${topLeftX + side}, ${topLeftY + side}`
+  item.bottom_left_loc = `${topLeftX}, ${topLeftY + side}`
 
   return item;
 }
@@ -20,9 +20,9 @@ describe('Testing items....', () => {
   });
 
   test('It should report clicked if coords are within defined rectangle', () => {
-    const item = phototag.createItem(getTestItem("abcd", 1, 1, 4));
+    const item = phototag.createItem(getTestItem("abcd", 6, 6, 4));
 
-    item.click({x: 2, y: 2});
+    item.click({x: 8, y: 8});
     expect(item.clicked()).toBeTruthy();
   });
 
@@ -30,26 +30,26 @@ describe('Testing items....', () => {
     let item;
 
     // x within, y below
-    item = phototag.createItem(getTestItem("abcd", 1, 1, 3));
-    item.click({x: 2, y: 0});
+    item = phototag.createItem(getTestItem("abcd", 6, 6, 3));
+    item.click({x: 2, y: 10});
     expect(item.clicked()).toBeDefined();
     expect(item.clicked()).toBeFalsy();
 
     // x within, y above
-    item = phototag.createItem(getTestItem("abcd", 1, 1, 3));
+    item = phototag.createItem(getTestItem("abcd", 6, 6, 3));
     item.click({x: 2, y: 5});
     expect(item.clicked()).toBeDefined();
     expect(item.clicked()).toBeFalsy();
 
     // x without to left, y within
-    item = phototag.createItem(getTestItem("abcd", 1, 1, 3));
-    item.click({x: 0, y: 2});
+    item = phototag.createItem(getTestItem("abcd", 6, 6, 3));
+    item.click({x: 5, y: 2});
     expect(item.clicked()).toBeDefined();
     expect(item.clicked()).toBeFalsy();
 
     // x without to right, y within
-    item = phototag.createItem(getTestItem("abcd", 1, 1, 3));
-    item.click({x: 5, y: 2});
+    item = phototag.createItem(getTestItem("abcd", 6, 6, 3));
+    item.click({x: 7, y: 2});
     expect(item.clicked()).toBeDefined();
     expect(item.clicked()).toBeFalsy();
   });

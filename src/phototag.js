@@ -21,7 +21,7 @@ const phototag = {
       const bottomY = helpers.getXY(state.bottom_right_loc).y;
       const topY = helpers.getXY(state.top_left_loc).y;
 
-      return x > leftX && x < rightX && y > bottomY && y < topY;
+      return x > leftX && x < rightX && y > topY && y < bottomY;
 
     },
 
