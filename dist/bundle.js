@@ -89,7 +89,7 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _assets_css_style_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);\n/* harmony import */ var _assets_css_style_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_assets_css_style_scss__WEBPACK_IMPORTED_MODULE_0__);\n// eslint-disable-next-line import/no-extraneous-dependencies\n__webpack_require__(1);\n\n// normalize.css must be loaded first before app css, so disable eslint check\n/* eslint-disable import/first */\n\n/* eslint-enable import/first */\n\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _assets_css_style_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);\n/* harmony import */ var _assets_css_style_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_assets_css_style_scss__WEBPACK_IMPORTED_MODULE_0__);\n// eslint-disable-next-line import/no-extraneous-dependencies\n__webpack_require__(1);\n\n// normalize.css must be loaded first before app css, so disable eslint check\n/* eslint-disable import/first */\n\n/* eslint-enable import/first */\n\nconst phototagAPIUtils = __webpack_require__(3);\n\nfunction handleResp(param) {console.log(\"handling response like a boss\");}\nfunction handleErr(param) {console.log(param);}\n\nphototagAPIUtils.makeAPIGetRequest(phototagAPIUtils.apiPaths.photoPath, {} , handleResp, handleErr);\n\n\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ }),
 /* 1 */
@@ -102,6 +102,12 @@ eval("// removed by extract-text-webpack-plugin\n\n//# sourceURL=webpack:///./no
 /***/ (function(module, exports) {
 
 eval("// removed by extract-text-webpack-plugin\n\n//# sourceURL=webpack:///./src/assets/css/style.scss?");
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+eval("\nconst phototagAPIUtils = {\n  apiPaths: {\n    photoPath: \"/api/v1/photos\"\n  },\n\n  buildAPIGetRequest(path, paramHash) {\n    let uri = `http://localhost:3000${path}?APITOKEN=9931c7c14267f95303df6518c28d8fd6`;\n\n    for (let key in paramHash) {\n      uri += `&${key}=${paramHash[key]}`;\n    }\n\n    return uri;\n  },\n\n  async doAPIGet(path, paramHash) {\n    let response;\n\n    try {\n      response = await fetch(phototagAPIUtils.buildAPIGetRequest(path, paramHash));\n    } catch(err) {\n      return Promise.reject(err);\n    }\n\n    if (response.ok) {\n      return Promise.resolve(response.json());\n    } else {\n      return Promise.reject(response);\n    }\n  },\n\n  makeAPIGetRequest(path, paramsHash, handleResp, handleErr) {\n    const timeoutPromise = new Promise((resolve, reject) => {\n      const id = setTimeout(() => {\n        clearTimeout(id);\n        reject('Photo server took too long to respond.');\n      }, 20000);\n    });\n\n    const apiRequest = Promise.race([phototagAPIUtils.doAPIGet(path, paramsHash), timeoutPromise]);\n\n    apiRequest.then(\n      response => {\n        handleResp(response);\n      },\n      error => {\n        handleErr(error);\n      }\n    );\n  },\n};\n\nmodule.exports = phototagAPIUtils;\n\n\n//# sourceURL=webpack:///./src/phototagAPIUtils.js?");
 
 /***/ })
 /******/ ]);

@@ -5,3 +5,11 @@ require('normalize.css');
 /* eslint-disable import/first */
 import './assets/css/style.scss';
 /* eslint-enable import/first */
+
+const phototagAPIUtils = require('./phototagAPIUtils');
+
+function handleResp(param) {console.log("handling response like a boss");}
+function handleErr(param) {console.log(param);}
+
+phototagAPIUtils.makeAPIGetRequest(phototagAPIUtils.apiPaths.photoPath, {} , handleResp, handleErr);
+
