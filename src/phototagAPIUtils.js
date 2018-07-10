@@ -2,7 +2,8 @@
 const phototagAPIUtils = {
   apiPaths: {
     photoPath: '/api/v1/photos',
-    leaderBoardPath: '/api/v1/leaderboard'
+    leaderBoardPath: '/api/v1/leaderboards',
+    challengePath: '/api/v1/challenges'
   },
 
   buildApiUrl(path, paramHash) {

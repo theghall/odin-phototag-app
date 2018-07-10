@@ -4,4 +4,52 @@
   box-sizing: border-box;
 }
 
+$applecore: #DCC7AA;
+$apricot: #F7882F;
+$blueberry: #6B7A8F;
+$citrus: #F7C331;
+
+/* Universal */
+
+body {
+  background-color: $citrus;
+}
+
+.hidden {
+  opacity: 0
+}
+
+#menu-page {
+  text-align: center;
+}
+
+#menu-page {
+  p {
+    display: inline-block;
+  }
+
+  #title {
+    font-size: 28px;
+    background-color: $applecore;
+    text-align: center;
+  }
+
+  table {
+    width: 650px;
+    margin: 0 auto;
+    margin-top: 10px;
+  }
+
+  table {
+    tr td {
+      text-align: center;
+    }
+
+    tr td:nth-child(1):hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+}
+
 /* ==================== end style.css =========================*/

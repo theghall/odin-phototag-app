@@ -300,4 +300,34 @@ template {
 * {
   box-sizing: border-box; }
 
+/* Universal */
+body {
+  background-color: #F7C331; }
+
+.hidden {
+  opacity: 0; }
+
+#menu-page {
+  text-align: center; }
+
+#menu-page p {
+  display: inline-block; }
+
+#menu-page #title {
+  font-size: 28px;
+  background-color: #DCC7AA;
+  text-align: center; }
+
+#menu-page table {
+  width: 650px;
+  margin: 0 auto;
+  margin-top: 10px; }
+
+#menu-page table tr td {
+  text-align: center; }
+
+#menu-page table tr td:nth-child(1):hover {
+  text-decoration: underline;
+  cursor: pointer; }
+
 /* ==================== end style.css =========================*/
