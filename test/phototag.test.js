@@ -155,6 +155,28 @@ describe('Testing pictureBoard....', () => {
     expect(picBoard.allItemsClicked()).toBeDefined();
     expect(picBoard.allItemsClicked()).toBeFalsy();
   });
+
+  test("it should return of list of items", () => {
+    const picBoard = phototag.createPictureBoard();
+    picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
+    picBoard.addItem(phototag.createItem(getTestItem("item2", 6, 6, 3)));
+
+    const items = picBoard.getItemList();
+    expect(items[0]).toMatch("item1");
+    expect(items[1]).toMatch("item2");
+  });
+
+  test("it should report name of item clicked", () => {
+    const picBoard = phototag.createPictureBoard();
+    picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
+    expect(picBoard.getNameOfClicked({x: 2, y: 2})).toMatch("item1");
+  });
+
+  test("it should report '' if no item clicked", () => {
+    const picBoard = phototag.createPictureBoard();
+    picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
+    expect(picBoard.getNameOfClicked({x: 7, y: 7})).toMatch("");
+  });
 });
 
   describe('Testing challengeController', () => {
