@@ -56,8 +56,9 @@ const phototag = {
   },
 
   itemable: state => ({
-    addItem: (item) => { state.items.push(item)},
-    getItem: (index) => state.items[index],
+    addItem: (item) => { state.items.push(item);},
+    getItem: (index) => { return Object.assign({},state.items[index]); },
+    getItemList: () => {return state.items.map(item => item.getName()); },
   }), 
 
   clickableBoard: (state, helpers) => ({
@@ -77,6 +78,16 @@ const phototag = {
     },
     getItemsClicked: () => state.itemsClicked.toString(),
     allItemsClicked: () => state.allItemsClicked,
+    getNameOfClicked: (coords) => {
+      let name = '';
+      for (let i = 0; i < state.items.length; i += 1) {
+        name = state.items[i].getNameOfClicked(coords);
+        if (name.length > 0) {
+          break;
+        }
+      }
+      return name;
+    },
   }),
 
   boardHelpers: {
