@@ -53,6 +53,16 @@ describe('Testing items....', () => {
     expect(item.clicked()).toBeDefined();
     expect(item.clicked()).toBeFalsy();
   });
+
+  test('it should report name of item being clicked', () => {
+    const item = phototag.createItem(getTestItem("abcd", 6, 6, 4));
+    expect(item.getNameOfClicked({x: 7, y: 7})).toMatch("abcd");
+  });
+
+  test('it should report "" if no item is clicked', () => {
+    const item = phototag.createItem(getTestItem("abcd", 6, 6, 4));
+    expect(item.getNameOfClicked({x: 17, y:17})).toMatch("");
+  });
 });
 
 describe('Testing pictureBoard....', () => {

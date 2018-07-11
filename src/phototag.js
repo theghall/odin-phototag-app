@@ -10,6 +10,13 @@ const phototag = {
       }
     },
     clicked: () => state.clicked,
+    getNameOfClicked(coords) {
+      if (helpers.coords_within_rect(coords, state, helpers)) {
+        return state.name;
+      } else {
+        return("");
+      }
+    }
   }),
 
   itemHelpers: {
