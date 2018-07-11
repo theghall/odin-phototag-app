@@ -5,8 +5,12 @@ const phototagAPIUtils = {
     leaderBoardPath: '/api/v1/leaderboard'
   },
 
+  getHostUrl() {
+    return('http://localhost:3000');
+  },
+
   buildApiUrl(path, paramHash) {
-    let uri = `http://localhost:3000${path}?APITOKEN=9931c7c14267f95303df6518c28d8fd6`;
+    let uri = `${phototagAPIUtils.getHostUrl()}${path}?APITOKEN=9931c7c14267f95303df6518c28d8fd6`;
 
     for (let key in paramHash) {
       uri += `&${key}=${paramHash[key]}`;
