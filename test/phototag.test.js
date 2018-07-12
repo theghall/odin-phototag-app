@@ -185,6 +185,17 @@ describe('Testing pictureBoard....', () => {
     const controller = phototag.createChallengeController(picBoard, null);
 
     // Challenge is created when someone chooses one
+    expect(controller.getState()).toMatch('ready');
+    expect(controller.getStatus()).toMatch(/ready/i);
+  });
+
+  test('It should report correct state and status after being started', () => {
+    const picBoard = phototag.createPictureBoard();
+
+    const controller = phototag.createChallengeController(picBoard, null);
+    controller.start();
+
+    // Challenge is created when someone chooses one
     expect(controller.getState()).toMatch('playing');
     expect(controller.getStatus()).toMatch(/click/i);
   });
@@ -194,10 +205,11 @@ describe('Testing pictureBoard....', () => {
     const picBoard = phototag.createPictureBoard();
     picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
     // Need to save this for later mock of Date.now
-    const controllerCreated = Date.now();
+    const controllerCreated = performance.now();
     const controller = phototag.createChallengeController(picBoard, null);
+    controller.start();
     // Need to do this just before last item is clicked
-    Date.now = jest.fn().mockImplementation(function() { return controllerCreated + 5000; });
+    performance.now = jest.fn().mockImplementation(function() { return controllerCreated + 5000; });
     controller.clickPicture({x: 2, y: 2});
     expect(controller.getState()).toMatch('over');
     expect(controller.getStatus()).toMatch(/finished/i);
@@ -211,6 +223,7 @@ describe('Testing pictureBoard....', () => {
     const challengeTime = 3000;
     const completedTime = 2000;
     const controller = phototag.createChallengeController(picBoard, challengeTime);
+    controller.start();
     jest.advanceTimersByTime(completedTime);
     controller.clickPicture({x: 2, y: 2});
     expect(controller.getState()).toMatch('over');
@@ -224,16 +237,25 @@ describe('Testing pictureBoard....', () => {
     picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
     const challengeTime = 30000;
     const controller = phototag.createChallengeController(picBoard, challengeTime);
+    controller.start();
     controller.clickPicture({x: 10, y: 10});
     jest.advanceTimersByTime(challengeTime);
     expect(controller.getState()).toMatch('over');
     expect(controller.getStatus()).toMatch(/failed/i);
   });
 
+  test.only('It should throw an error if click is called before game is started', () => {
+    const picBoard = phototag.createPictureBoard();
+    picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
+    const controller = phototag.createChallengeController(picBoard, null);
+    expect(() => controller.clickPicture({x: 2, y: 2})).toThrow();
+  });
+
   test('It should throw an error if click is called after game is over', () => {
     const picBoard = phototag.createPictureBoard();
     picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
     const controller = phototag.createChallengeController(picBoard, null);
+    controller.start();
     controller.clickPicture({x: 2, y: 2});
     expect(controller.getState()).toMatch('over');
     expect(() => controller.clickPicture({x: 2, y: 2})).toThrow();

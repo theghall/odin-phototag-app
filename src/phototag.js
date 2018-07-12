@@ -119,6 +119,11 @@ const phototag = {
   phaseable: state => ({
     getStatus: () => state.gameStatus,
     getState: () => state.phase,
+    start: () => {
+      state.phase = 'playing';
+      state.gameStatus = 'Click on objects and/or people';
+      state.timeStart = performance.now();
+    }
   }),
 
   playable: state => ({
@@ -129,7 +134,7 @@ const phototag = {
 
       state.picBoard.click(coords);
       if (state.picBoard.allItemsClicked()) {
-        state.elapsedTime = Date.now() - state.timeStart;
+        state.elapsedTime = performance.now() - state.timeStart;
         state.phase = 'over';
         state.gameStatus = `You finished in ${(state.elapsedTime/1000).toFixed(1)} seconds`
 
@@ -157,9 +162,9 @@ const phototag = {
 
     const state = {
       picBoard: picBoard,
-      phase: 'playing',
-      gameStatus: 'Click on objects and/or people',
-      timeStart: Date.now(),
+      phase: 'ready',
+      gameStatus: 'Game is ready to start',
+      timeStart: null,
       elapsedTime: 0,
       challengeTime: challengeTime,
       timerID: null,
