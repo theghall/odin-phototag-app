@@ -244,7 +244,7 @@ describe('Testing pictureBoard....', () => {
     expect(controller.getStatus()).toMatch(/failed/i);
   });
 
-  test.only('It should throw an error if click is called before game is started', () => {
+  test('It should throw an error if click is called before game is started', () => {
     const picBoard = phototag.createPictureBoard();
     picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
     const controller = phototag.createChallengeController(picBoard, null);
