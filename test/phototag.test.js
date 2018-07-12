@@ -5,9 +5,7 @@ function getTestItem(name = "abcd", topLeftX, topLeftY, side) {
 
   item.name = name;
   item.top_left_loc = `${topLeftX}, ${topLeftY}`
-  item.top_right_loc = `${topLeftX + side}, ${topLeftY}`
   item.bottom_right_loc = `${topLeftX + side}, ${topLeftY + side}`
-  item.bottom_left_loc = `${topLeftX}, ${topLeftY + side}`
 
   return item;
 }

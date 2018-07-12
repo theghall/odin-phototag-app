@@ -38,6 +38,7 @@ const phototag = {
       const x = parseInt(locArr[0], 10);
       const y = parseInt(locArr[1], 10);
 
+
       return {"x": x, "y": y}
     },
   },
@@ -45,9 +46,7 @@ const phototag = {
   createItem(item) {
     const state = {
       name: item.name,
-      bottom_left_loc: item.bottom_left_loc,
       top_left_loc: item.top_left_loc,
-      top_right_loc: item.top_right_loc,
       bottom_right_loc: item.bottom_right_loc,
       clicked: false
     };
