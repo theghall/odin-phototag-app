@@ -260,4 +260,25 @@ describe('Testing pictureBoard....', () => {
     expect(controller.getState()).toMatch('over');
     expect(() => controller.clickPicture({x: 2, y: 2})).toThrow();
   });
+
+  test('it should return zero padded representation of a current elpased time of 0', ()=> {
+    const picBoard = phototag.createPictureBoard();
+    const controller = phototag.createChallengeController(picBoard, null);
+    const origPerformance = performance.now;
+    performance.now = jest.fn().mockReturnValue(0);
+    controller.start();
+    expect(controller.getTextCurrElapsedTime()).toMatch('00:00:00');
+    performance.now = origPerformance;
+  });
+
+  test('it should return correct` representation of a current elpased time of 11:55:51', ()=> {
+    const picBoard = phototag.createPictureBoard();
+    const controller = phototag.createChallengeController(picBoard, null);
+    const origPerformance = performance.now;
+    performance.now = jest.fn().mockReturnValue(0);
+    controller.start();
+    performance.now = jest.fn().mockReturnValue(715510);
+    expect(controller.getTextCurrElapsedTime()).toMatch('11:55:51');
+    performance.now = origPerformance;
+  });
 });
