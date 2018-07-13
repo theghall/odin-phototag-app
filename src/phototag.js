@@ -146,14 +146,14 @@ const phototag = {
     },
     getElapsedTime: () => state.elapsedTime,
     getTextCurrElapsedTime: () => {
-      let textTime;
+      let textTime = '';
       const timeDiff = performance.now() - state.timeStart;
       const minutes = Math.floor(timeDiff / 60000);
       textTime += minutes.toString().padStart(2, '0');
-      const seconds = Math.floor((timeDiff % 60000) / 1000);
+      const seconds = (timeDiff % 60000) / 1000;
       textTime += ':';
-      textTime += seconds.toString().padStart(2, '0');
-      const hundreths = (timeDiff % 6000) % 1000;
+      textTime += Math.floor(seconds).toString().padStart(2, '0');
+      const hundreths = Math.round(seconds % 1 * 100);
       textTime += ':';
       textTime += hundreths.toString().padStart(2, '0');
       return textTime;

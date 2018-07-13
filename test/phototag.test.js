@@ -267,18 +267,18 @@ describe('Testing pictureBoard....', () => {
     const origPerformance = performance.now;
     performance.now = jest.fn().mockReturnValue(0);
     controller.start();
-    expect(controller.getTextCurrElapsedTime()).toMatch('00:00:00');
+    expect(controller.getTextCurrElapsedTime()).toMatch(/^00:00:00$/);
     performance.now = origPerformance;
   });
 
-  test('it should return correct` representation of a current elpased time of 11:55:51', ()=> {
+  test('it should return correct` representation of a current elpased time of 11:55:55', ()=> {
     const picBoard = phototag.createPictureBoard();
     const controller = phototag.createChallengeController(picBoard, null);
     const origPerformance = performance.now;
     performance.now = jest.fn().mockReturnValue(0);
     controller.start();
-    performance.now = jest.fn().mockReturnValue(715510);
-    expect(controller.getTextCurrElapsedTime()).toMatch('11:55:51');
+    performance.now = jest.fn().mockReturnValue(715550);
+    expect(controller.getTextCurrElapsedTime()).toMatch(/^11:55:55$/);
     performance.now = origPerformance;
   });
 });
