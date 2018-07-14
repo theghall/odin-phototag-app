@@ -9,16 +9,42 @@ $apricot: #F7882F;
 $blueberry: #6B7A8F;
 $citrus: #F7C331;
 
+$displayboardHeight: 500px;
+$displayboardWidth: 1100px;
+$noticeHeight: 25px;
+$sideboardHeight: $displayboardHeight;
+$sideboardWidth: 250px;
+$picboardHeight: $displayboardHeight - $noticeHeight;
+$picboardWidth: $displayboardWidth - $sideboardWidth;
+
 /* Universal */
 
 body {
   background-color: $citrus;
+  font-size: 28px;
+}
+
+.strike {
+  text-decoration: line-through;
 }
 
 .hidden {
-  opacity: 0
+  position:absolute;
+  left:-10000px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+  display: none;
 }
 
+#title {
+  font-size: 28px;
+  background-color: $applecore;
+  text-align: center;
+}
+
+/* Menu page */
 #menu-page {
   text-align: center;
 }
@@ -26,12 +52,6 @@ body {
 #menu-page {
   p {
     display: inline-block;
-  }
-
-  #title {
-    font-size: 28px;
-    background-color: $applecore;
-    text-align: center;
   }
 
   table {
@@ -52,4 +72,40 @@ body {
   }
 }
 
+/* Challenge page */
+#display-board {
+  display: grid;
+  height: $displayboardHeight;
+  width: $displayboardWidth;
+  grid-template-columns: $sideboardWidth $picboardWidth;
+}
+
+#side-board {
+  height: $sideboardHeight;
+  width: $sideboardWidth;
+}
+
+#side-board p {
+  text-align: center;
+}
+
+#side-board p:nth-child(4) {
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+#side-board ul {
+  list-style: none;
+  margin: 0;
+}
+
+#pic-board {
+  display: grid;
+  height: $picboardHeight;
+  width: $picboardWidth;
+}
+
+#status {
+  height: $noticeHeight;
+}
 /* ==================== end style.css =========================*/
