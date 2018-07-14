@@ -302,21 +302,32 @@ template {
 
 /* Universal */
 body {
-  background-color: #F7C331; }
+  background-color: #F7C331;
+  font-size: 28px; }
+
+.strike {
+  text-decoration: line-through; }
 
 .hidden {
-  opacity: 0; }
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  display: none; }
 
+#title {
+  font-size: 28px;
+  background-color: #DCC7AA;
+  text-align: center; }
+
+/* Menu page */
 #menu-page {
   text-align: center; }
 
 #menu-page p {
   display: inline-block; }
-
-#menu-page #title {
-  font-size: 28px;
-  background-color: #DCC7AA;
-  text-align: center; }
 
 #menu-page table {
   width: 650px;
@@ -329,5 +340,35 @@ body {
 #menu-page table tr td:nth-child(1):hover {
   text-decoration: underline;
   cursor: pointer; }
+
+/* Challenge page */
+#display-board {
+  display: grid;
+  height: 500px;
+  width: 1100px;
+  grid-template-columns: 250px 850px; }
+
+#side-board {
+  height: 500px;
+  width: 250px; }
+
+#side-board p {
+  text-align: center; }
+
+#side-board p:nth-child(4) {
+  margin: 0;
+  margin-bottom: 10px; }
+
+#side-board ul {
+  list-style: none;
+  margin: 0; }
+
+#pic-board {
+  display: grid;
+  height: 475px;
+  width: 850px; }
+
+#status {
+  height: 25px; }
 
 /* ==================== end style.css =========================*/
