@@ -12,7 +12,7 @@ function getTestItem(name = "abcd", topLeftX, topLeftY, side) {
 
 function getChallengeData(type, time, directed) {
   const meta_data = "{\"ctype\": " + "\"" + `${type}` +  "\"" + ", \"ctime\": " + `${time}` + ", \"directed\": " + `${directed}` + "}";
-  return {"appid":"88cd371c98dded59","name":"Star Trek Captains timed challenge","desc":"Click on the face of each captain","photo_name":"startrekcaptains.jpg","meta_data": `${meta_data}`,"leaderboards":[]}
+  return JSON.stringify({"appid":"88cd371c98dded59","name":"Star Trek Captains timed challenge","desc":"Click on the face of each captain","photo_name":"startrekcaptains.jpg","meta_data": `${meta_data}`,"leaderboards":[]});
 }
 
 describe('Testing items....', () => {
