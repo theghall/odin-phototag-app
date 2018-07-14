@@ -137,7 +137,7 @@ const phototag = {
       state.phase = 'ready';
       state.gameStatus = 'ready';
 
-      const meta_data = JSON.parse(state.challenge.meta_data);
+      const meta_data = JSON.parse(JSON.parse(state.challenge).meta_data);
       if (meta_data.directed) {
         helpers.createDirectedArray(state)
       }
@@ -216,7 +216,7 @@ const phototag = {
 
   createChallengeController(picBoard, challenge) {
     let controller = null;
-    const meta_data = JSON.parse(challenge.meta_data);
+    const meta_data = JSON.parse(JSON.parse(challenge).meta_data);
     const timedChallenge = meta_data.ctype === 'timed';
 
     const state = {
