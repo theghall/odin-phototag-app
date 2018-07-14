@@ -220,31 +220,33 @@ const phototagUI = {
     phototagAPIInterface.getChallenges(phototagUI.addChallengeMenu, phototagUI.handleFetchErr);
   },
 
-  buildChallengePage() {
-    phototagUI.removeElement(phototagUI.identifiers.menuPageID);
-    const challenge = JSON.parse(phototagUI.interfaces.challengeController.getChallengeData());
-    const rootElement = phototagUI.getRootElement();
-    const challengePage = phototagUI.createWrapperElement(phototagUI.identifiers.challengePageID);
-    const displayBoard = phototagUI.createWrapperElement(phototagUI.identifiers.displayBoardID);
-    // sideboard
+  createSideboard(challenge) {
     const sideboard = phototagUI.createWrapperElement(phototagUI.identifiers.sideboardID);
+    // Challenge name
     let p = document.createElement('p');
     p.textContent = challenge.name;
     sideboard.appendChild(p);
+    // Challenge description
     p = document.createElement('p');
     p.textContent = challenge.desc;
     sideboard.appendChild(p);
+    // Timer
     p = document.createElement('p');
     p.id = phototagUI.identifiers.timerID;
     p.textContent = '00:00:00';
     sideboard.appendChild(p);
     p = document.createElement('p');
+    // Item list
     p.textContent = 'To be found:';
     sideboard.appendChild(p);
     const itemList = document.createElement('ul');
     itemList.id = phototagUI.identifiers.itemListID;
     sideboard.appendChild(itemList);
-    displayBoard.appendChild(sideboard);
+
+    return sideboard;
+  },
+
+  createMainboard() {
     // mainboard
     const mainboard = phototagUI.createWrapperElement(phototagUI.identifiers.mainBoardID);
     const picboard = phototagUI.createWrapperElement(phototagUI.identifiers.picboardID);
@@ -255,7 +257,18 @@ const phototagUI = {
     picboard.appendChild(img);
     mainboard.appendChild(picboard);
     mainboard.appendChild(phototagUI.createWrapperElement(phototagUI.identifiers.noticeID));
-    displayBoard.appendChild(mainboard);
+
+    return mainboard;
+  },
+
+  buildChallengePage() {
+    phototagUI.removeElement(phototagUI.identifiers.menuPageID);
+    const challenge = JSON.parse(phototagUI.interfaces.challengeController.getChallengeData());
+    const rootElement = phototagUI.getRootElement();
+    const challengePage = phototagUI.createWrapperElement(phototagUI.identifiers.challengePageID);
+    const displayBoard = phototagUI.createWrapperElement(phototagUI.identifiers.displayBoardID);
+    displayBoard.appendChild(phototagUI.createSideboard(challenge));
+    displayBoard.appendChild(phototagUI.createMainboard());
     challengePage.appendChild(displayBoard);
     rootElement.appendChild(challengePage);
   },
