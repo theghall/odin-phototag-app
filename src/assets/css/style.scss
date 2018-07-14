@@ -38,6 +38,12 @@ body {
   display: none;
 }
 
+.btn {
+  background: lightgrey;
+  border-radius: 5px;
+  margin: 3px;
+}
+
 #title {
   font-size: 28px;
   background-color: $applecore;
@@ -108,4 +114,34 @@ body {
 #status {
   height: $noticeHeight;
 }
+
+#popup-wrapper {
+  width: 100%;
+  height: 100%;
+  top:0;
+  left:0;
+  position:fixed;
+  overflow:auto;
+}
+
+#popup {
+  position:absolute;
+  left:50%;
+  top:17%;
+  margin-left:-202px;
+}
+
+#submit-time {
+  max-width:375px;
+  min-width:250px;
+  padding:10px 50px;
+  border:2px solid gray;
+  border-radius:10px;
+  background-color: $citrus;
+}
+
+#submit-time input[type=text] {
+  width: 80px;
+}
+
 /* ==================== end style.css =========================*/
