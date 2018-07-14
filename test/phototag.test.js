@@ -10,6 +10,11 @@ function getTestItem(name = "abcd", topLeftX, topLeftY, side) {
   return item;
 }
 
+function getChallengeData(type, time, directed) {
+  const meta_data = "{\"ctype\": " + "\"" + `${type}` +  "\"" + ", \"ctime\": " + `${time}` + ", \"directed\": " + `${directed}` + "}";
+  return {"appid":"88cd371c98dded59","name":"Star Trek Captains timed challenge","desc":"Click on the face of each captain","photo_name":"startrekcaptains.jpg","meta_data": `${meta_data}`,"leaderboards":[]}
+}
+
 describe('Testing items....', () => {
   test('it should create an item with the correct name', () => {
     const item = phototag.createItem(getTestItem("abcd", 1, 1, 4));
@@ -179,12 +184,39 @@ describe('Testing pictureBoard....', () => {
 
   describe('Testing challengeController', () => {
 
-  test('It should create a controller with correct state and status', () => {
+  test('It should create a controller with no picboard with correct state and status', () => {
     const picBoard = phototag.createPictureBoard();
 
-    const controller = phototag.createChallengeController(picBoard, null);
+    const controller = phototag.createChallengeController(null, getChallengeData("timed", 30000, true));
 
     // Challenge is created when someone chooses one
+    expect(controller.getState()).toMatch('created');
+    expect(controller.getStatus()).toMatch(/created/i);
+  });
+
+  test('It should create a controller with picboard with correct state and status', () => {
+    const picBoard = phototag.createPictureBoard();
+
+    const challengeData = getChallengeData("timed", 3000, true);
+    const controller = phototag.createChallengeController(picBoard, challengeData);
+
+    // Challenge is created when someone chooses one
+    expect(controller.getState()).toMatch('ready');
+    expect(controller.getStatus()).toMatch(/ready/i);
+    expect(controller.getChallengeData()).toBe(challengeData);
+  });
+    
+  test('it should throw an error if start is called before pic is added', () => {
+    const controller = phototag.createChallengeController(null, getChallengeData("timed", 30000, true));
+    expect(() => controller.start()).toThrow();
+  });
+
+  test('it should report correct state and status after adding a picboard', () => {
+    const picBoard = phototag.createPictureBoard();
+
+    const controller = phototag.createChallengeController(null, getChallengeData("timed", 30000, true));
+    controller.addPicboard(picBoard);
+
     expect(controller.getState()).toMatch('ready');
     expect(controller.getStatus()).toMatch(/ready/i);
   });
@@ -192,12 +224,20 @@ describe('Testing pictureBoard....', () => {
   test('It should report correct state and status after being started', () => {
     const picBoard = phototag.createPictureBoard();
 
-    const controller = phototag.createChallengeController(picBoard, null);
+    const controller = phototag.createChallengeController(picBoard, getChallengeData("timed", 30000, false));
     controller.start();
 
     // Challenge is created when someone chooses one
     expect(controller.getState()).toMatch('playing');
     expect(controller.getStatus()).toMatch(/click/i);
+  });
+
+  test('it should throw an error if start is called after start has already been called', () => {
+    const picBoard = phototag.createPictureBoard();
+
+    const controller = phototag.createChallengeController(picBoard, getChallengeData("timed", 30000, true));
+    controller.start();
+    expect(() => controller.start()).toThrow();
   });
 
   test('It should report correct status and state when an unlimited time challenge is over', () => {
@@ -206,7 +246,7 @@ describe('Testing pictureBoard....', () => {
     picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
     // Need to save this for later mock of Date.now
     const controllerCreated = performance.now();
-    const controller = phototag.createChallengeController(picBoard, null);
+    const controller = phototag.createChallengeController(picBoard, getChallengeData("untimed", 0, true));
     controller.start();
     // Need to do this just before last item is clicked
     performance.now = jest.fn().mockImplementation(function() { return controllerCreated + 5000; });
@@ -216,13 +256,14 @@ describe('Testing pictureBoard....', () => {
     expect(controller.getStatus()).toMatch(/5\.0/i);
   });
 
-  test('It should report correct status and state when challenge is completed before time expires on a timed challenge', () => {
+  test('It should report correct status and state when challenge is completed before time expires on a timed challenge, undirected', () => {
     jest.useFakeTimers();
     const picBoard = phototag.createPictureBoard();
     picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
     const challengeTime = 3000;
+    const challengeData = getChallengeData("timed", challengeTime, false);
     const completedTime = 2000;
-    const controller = phototag.createChallengeController(picBoard, challengeTime);
+    const controller = phototag.createChallengeController(picBoard, challengeData);
     controller.start();
     jest.advanceTimersByTime(completedTime);
     controller.clickPicture({x: 2, y: 2});
@@ -231,12 +272,13 @@ describe('Testing pictureBoard....', () => {
     jest.clearAllTimers()
   });
 
-  test('It should report correct status and state when time expires on a time limited challenge', () => {
+  test('It should report correct status and state when time expires on a time limited challenge, undirected', () => {
     jest.useFakeTimers();
     const picBoard = phototag.createPictureBoard();
     picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
     const challengeTime = 30000;
-    const controller = phototag.createChallengeController(picBoard, challengeTime);
+    const challengeData = getChallengeData("timed", challengeTime, false);
+    const controller = phototag.createChallengeController(picBoard, challengeData);
     controller.start();
     controller.clickPicture({x: 10, y: 10});
     jest.advanceTimersByTime(challengeTime);
@@ -244,26 +286,55 @@ describe('Testing pictureBoard....', () => {
     expect(controller.getStatus()).toMatch(/failed/i);
   });
 
+  test('it should report game over only if items are clicked in directed order', () => {
+    jest.useFakeTimers();
+    const picBoard = phototag.createPictureBoard();
+    picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
+    picBoard.addItem(phototag.createItem(getTestItem("item2", 6, 6, 3)));
+    picBoard.addItem(phototag.createItem(getTestItem("item3", 11, 11, 3)));
+    picBoard.addItem(phototag.createItem(getTestItem("item4", 16, 16, 3)));
+    const origRandom = Math.random;
+    Math.random = jest.fn();
+    Math.random.mockReturnValueOnce(2).mockReturnValueOnce(3).mockReturnValueOnce(1).mockReturnValueOnce(4);
+    const controller = phototag.createChallengeController(picBoard, getChallengeData("timed", 30000, true));
+    Math.random = origRandom;
+    controller.start();
+    expect(controller.getStatus()).toMatch(/item3/i);
+    controller.clickPicture({x: 2, y: 2});
+    controller.clickPicture({x: 7, y: 7});
+    controller.clickPicture({x: 12, y: 12});
+    expect(controller.getStatus()).toMatch(/item1/i);
+    controller.clickPicture({x: 17, y: 17});
+    expect(controller.getState()).toMatch('playing');
+    // item3 was clicked above
+    controller.clickPicture({x: 2, y: 2});
+    expect(controller.getStatus()).toMatch(/item2/i);
+    controller.clickPicture({x: 7, y: 7});
+    expect(controller.getStatus()).toMatch(/item4/i);
+    controller.clickPicture({x: 17, y: 17});
+    expect(controller.getState()).toMatch('over');
+  });
+
   test('It should throw an error if click is called before game is started', () => {
     const picBoard = phototag.createPictureBoard();
     picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
-    const controller = phototag.createChallengeController(picBoard, null);
+    const controller = phototag.createChallengeController(picBoard, getChallengeData("timed", 30000, true));
     expect(() => controller.clickPicture({x: 2, y: 2})).toThrow();
   });
 
   test('It should throw an error if click is called after game is over', () => {
     const picBoard = phototag.createPictureBoard();
     picBoard.addItem(phototag.createItem(getTestItem("item1", 1, 1, 3)));
-    const controller = phototag.createChallengeController(picBoard, null);
+    const controller = phototag.createChallengeController(picBoard, getChallengeData("timed", 30000, true));
     controller.start();
     controller.clickPicture({x: 2, y: 2});
     expect(controller.getState()).toMatch('over');
     expect(() => controller.clickPicture({x: 2, y: 2})).toThrow();
   });
 
-  test('it should return zero padded representation of a current elpased time of 0', ()=> {
+  test('it should return zero padded representation of a current elpased time of 0 for untimed challenge', ()=> {
     const picBoard = phototag.createPictureBoard();
-    const controller = phototag.createChallengeController(picBoard, null);
+    const controller = phototag.createChallengeController(picBoard, getChallengeData("untimed", 0, true));
     const origPerformance = performance.now;
     performance.now = jest.fn().mockReturnValue(0);
     controller.start();
@@ -271,14 +342,37 @@ describe('Testing pictureBoard....', () => {
     performance.now = origPerformance;
   });
 
-  test('it should return correct` representation of a current elpased time of 11:55:55', ()=> {
+  test('it should return correct` representation of a current elpased time of 11:55:55 for untimed challenge', ()=> {
     const picBoard = phototag.createPictureBoard();
-    const controller = phototag.createChallengeController(picBoard, null);
+    const metaData = {"ctype": "untimed", true: "true"};
+    const controller = phototag.createChallengeController(picBoard, getChallengeData("untimed", 0, true));
     const origPerformance = performance.now;
     performance.now = jest.fn().mockReturnValue(0);
     controller.start();
     performance.now = jest.fn().mockReturnValue(715550);
     expect(controller.getTextCurrElapsedTime()).toMatch(/^11:55:55$/);
+    performance.now = origPerformance;
+  });
+
+  test('it should return zero padded representation of current time for timed challenge', () => {
+    const picBoard = phototag.createPictureBoard();
+    const controller = phototag.createChallengeController(picBoard, getChallengeData("timed", 30000, true));
+    const origPerformance = performance.now;
+    performance.now = jest.fn().mockReturnValue(0);
+    controller.start();
+    expect(controller.getTextCurrElapsedTime()).toMatch(/^00:30:00$/);
+    performance.now = origPerformance;
+  });
+
+  test('it should return correct` representation of a current elpased time for timed challenge', ()=> {
+    const picBoard = phototag.createPictureBoard();
+    const metaData = {"ctype": "untimed", true: "true"};
+    const controller = phototag.createChallengeController(picBoard, getChallengeData("timed", 30000, true));
+    const origPerformance = performance.now;
+    performance.now = jest.fn().mockReturnValue(0);
+    controller.start();
+    performance.now = jest.fn().mockReturnValue(20000);
+    expect(controller.getTextCurrElapsedTime()).toMatch(/^00:10:00$/);
     performance.now = origPerformance;
   });
 });
