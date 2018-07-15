@@ -28,6 +28,11 @@ const phototagUI = {
     challengeController: null
   },
 
+  resetInterfaces() {
+    phototagUI.interfaces.picBoard = null;
+    phototagUI.interfaces.challengeController = null;
+  },
+
   identifiers: {
     appTitleID: 'title',
     challengePageID: 'challenge-page',
@@ -317,6 +322,12 @@ const phototagUI = {
     handleCloseModal(e) {
       phototagUI.closeModal();
     },
+
+    handleGotoMenu(e) {
+      phototagUI.resetInterfaces();
+      phototagUI.removeElement(phototagUI.identifiers.challengePageID);
+      phototagUI.buildMenuPage();
+    },
   },
 
   createDataCell(tag, text, hidden = false) {
@@ -380,26 +391,37 @@ const phototagUI = {
 
   createSideboard(challenge) {
     const sideboard = phototagUI.createWrapperElement(phototagUI.identifiers.sideboardID);
+    const infoWrapper = document.createElement('div');
     // Challenge name
     let p = document.createElement('p');
     p.textContent = challenge.name;
-    sideboard.appendChild(p);
+    infoWrapper.appendChild(p);
     // Challenge description
     p = document.createElement('p');
     p.textContent = challenge.desc;
-    sideboard.appendChild(p);
+    infoWrapper.appendChild(p);
     // Timer
     p = document.createElement('p');
     p.id = phototagUI.identifiers.timerID;
     p.textContent = '00:00:00';
-    sideboard.appendChild(p);
-    p = document.createElement('p');
+    infoWrapper.appendChild(p);
     // Item list
+    p = document.createElement('p');
     p.textContent = 'To be found:';
-    sideboard.appendChild(p);
+    infoWrapper.appendChild(p);
     const itemList = document.createElement('ul');
     itemList.id = phototagUI.identifiers.itemListID;
-    sideboard.appendChild(itemList);
+    infoWrapper.appendChild(itemList);
+    // Button area
+    const buttonWrapper = document.createElement('div');
+    const button = document.createElement('button');
+    button.classList.add('btn');
+    button.textContent = 'Challenge Menu';
+    button.addEventListener('click', phototagUI.listeners.handleGotoMenu);
+    buttonWrapper.appendChild(button);
+
+    sideboard.appendChild(infoWrapper);
+    sideboard.appendChild(buttonWrapper);
 
     return sideboard;
   },
@@ -433,12 +455,17 @@ const phototagUI = {
 
   buildMenuPage() {
     const rootElement = phototagUI.getRootElement();
-    rootElement.appendChild(phototagUI.createTitleBanner());
     const menuPage = phototagUI.createWrapperElement(phototagUI.identifiers.menuPageID);
     rootElement.appendChild(menuPage);
     menuPage.appendChild(phototagUI.createFetchingNotice('challenges'));
     phototagUI.requestChallenges();
   },
+
+  initPhototag() {
+    const rootElement = phototagUI.getRootElement();
+    rootElement.appendChild(phototagUI.createTitleBanner());
+    phototagUI.buildMenuPage();
+  }
 };
 
 module.exports = phototagUI;

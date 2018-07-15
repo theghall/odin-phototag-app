@@ -87,8 +87,11 @@ body {
 }
 
 #side-board {
+  display: grid;
   height: $sideboardHeight;
   width: $sideboardWidth;
+  grid-template-columns: 1fr;
+  grid-template-rows: $sideboardHeight - 25px 25px;
 }
 
 #side-board p {

@@ -8,5 +8,5 @@ import './assets/css/style.scss';
 
 const phototagUI = require('./phototagUI');
 
-phototagUI.buildMenuPage();
+phototagUI.initPhototag();
 
