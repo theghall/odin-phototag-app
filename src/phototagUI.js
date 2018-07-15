@@ -12,9 +12,7 @@ const phototagAPIInterface = {
 
   updateLeaderboard(appid, initials, time, displayCallback, errorCallback) {
     const paramsHash = {appid: `${appid}`};
-    const payload = { player: { name: `${initials}`, challenge_time: `${time}` }};
-    console.log(paramsHash);
-    console.log(payload);
+    const payload = { leaderboard: { name: `${initials}`, challenge_time: `${time}` }};
     phototagAPI.makeAPIPostRequest(phototagAPI.apiPaths.leaderBoardPath, paramsHash, payload, displayCallback, errorCallback)
   },
 };
@@ -269,7 +267,7 @@ const phototagUI = {
       initials.textContent = initialsVal;
       const time = phototagUI.getTimeInSeconds(phototagUI.interfaces.challengeController.getElapsedTime());
       const appid = JSON.parse(phototagUI.interfaces.challengeController.getChallengeData()).appid;
-      phototagAPIInterface.updateLeaderboard(appid, initialsVal, time, phototagUI.handleUpdateSucess, phototagUI.handleUpdateError);
+      phototagAPIInterface.updateLeaderboard(appid, initialsVal, time, phototagUI.handleUpdateSuccess, phototagUI.handleUpdateError);
       phototagUI.closeModal();
     },
 
