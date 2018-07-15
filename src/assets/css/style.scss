@@ -100,6 +100,7 @@ body {
   margin-bottom: 10px;
 }
 
+#topten ol,
 #side-board ul {
   list-style: none;
   margin: 0;
@@ -124,19 +125,27 @@ body {
   overflow:auto;
 }
 
-#popup {
+#submit-popup {
   position:absolute;
-  left:50%;
-  top:17%;
-  margin-left:-202px;
+  left: 50%;
+  top: 17%;
+  margin-left: -202px;
 }
 
+#topten-popup {
+  position:absolute;
+  left: 50%;
+  top: 2%;
+  margin-left: -202px;
+}
+
+#topten,
 #submit-time {
-  max-width:375px;
-  min-width:250px;
-  padding:10px 50px;
-  border:2px solid gray;
-  border-radius:10px;
+  max-width: 375px;
+  min-width: 250px;
+  padding: 10px 50px;
+  border: 2px solid gray;
+  border-radius: 10px;
   background-color: $citrus;
 }
 

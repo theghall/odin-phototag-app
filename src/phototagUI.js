@@ -3,7 +3,7 @@ const phototagAPI = require('./phototagAPIUtils');
 
 const phototagAPIInterface = {
   getChallenges(displayCallback, errorCallback) {
-  phototagAPI.makeAPIGetRequest(phototagAPI.apiPaths.challengePath, {}, displayCallback, errorCallback);
+    phototagAPI.makeAPIGetRequest(phototagAPI.apiPaths.challengePath, {}, displayCallback, errorCallback);
   },
 
   getPhotoInfo(image, displayCallback, errorCallback) {
@@ -13,7 +13,12 @@ const phototagAPIInterface = {
   updateLeaderboard(appid, initials, time, displayCallback, errorCallback) {
     const paramsHash = {appid: `${appid}`};
     const payload = { leaderboard: { name: `${initials}`, challenge_time: `${time}` }};
-    phototagAPI.makeAPIPostRequest(phototagAPI.apiPaths.leaderBoardPath, paramsHash, payload, displayCallback, errorCallback)
+    phototagAPI.makeAPIPostRequest(phototagAPI.apiPaths.leaderBoardPath, paramsHash, payload, displayCallback, errorCallback);
+  },
+
+  getLeaders(appid, displayCallback, errorCallback) {
+    const paramsHash = {appid: `${appid}`};
+    phototagAPI.makeAPIGetRequest(phototagAPI.apiPaths.leaderBoardPath, paramsHash, displayCallback, errorCallback);
   },
 };
 
@@ -36,11 +41,13 @@ const phototagUI = {
     photoID: 'challenge-photo',
     picboardID: 'pic-board',
     popupWrapperID: 'popup-wrapper',
-    popupID: 'popup',
-    timeFormID: 'time-form',
     sideboardID: 'side-board',
+    submitPopupID: 'submit-popup',
     submitTimeID: 'submit-time',
-    timerID: 'timer'
+    timerID: 'timer',
+    timeFormID: 'time-form',
+    topTenID: 'topten',
+    toptenPopupID: 'topten-popup',
   },
 
   appName() {
@@ -84,8 +91,8 @@ const phototagUI = {
     return container;
   },
 
-  createPopup() {
-    const popup = phototagUI.createWrapperElement(phototagUI.identifiers.popupID);
+  createPopup(id) {
+    const popup = phototagUI.createWrapperElement(id);
     return popup;
   },
 
@@ -191,7 +198,7 @@ const phototagUI = {
 
   buildSubmitTimeForm() {
     const displayContainer = phototagUI.createPopupWrapper();
-    const popupContainer = phototagUI.createPopup();
+    const popupContainer = phototagUI.createPopup(phototagUI.identifiers.submitPopupID);
 
     const form = document.createElement('form');
     form.id = phototagUI.identifiers.submitTimeID;
@@ -217,6 +224,36 @@ const phototagUI = {
     phototagUI.getRootElement().appendChild(displayContainer);
   },
 
+  buildLeaderPopup(leaders) {
+    const displayContainer = phototagUI.createPopupWrapper();
+    const popupContainer = phototagUI.createPopup(phototagUI.identifiers.toptenPopupID);
+    const topten = phototagUI.createWrapperElement(phototagUI.identifiers.topTenID);
+
+
+    const p = document.createElement('p');
+    p.textContent = "Top Ten for this challenge";
+
+    const ol = document.createElement('ol');
+
+    // Display top 10
+    for (let i = 0; i < 10; i += 1) {
+      const li = document.createElement('li');
+      // Lets us create empty slots
+      if (i < leaders.length) {
+        li.textContent = leaders[i]["name"] + ' ' + leaders[i]["challenge_time"];
+      }
+      ol.appendChild(li);
+    }
+
+    topten.appendChild(p);
+    topten.appendChild(ol);
+    topten.appendChild(phototagUI.createCloseModal());
+
+    popupContainer.appendChild(topten)
+    displayContainer.appendChild(popupContainer);
+    phototagUI.getRootElement().appendChild(displayContainer);
+  },
+
   closeModal() {
     const rootElement = phototagUI.getRootElement();
     const wrapper = document.getElementById(phototagUI.identifiers.popupWrapperID);
@@ -226,10 +263,16 @@ const phototagUI = {
 
   handleUpdateSuccess() {
     phototagUI.updateNotice('Your score was successfully submitted');
+    const appid = JSON.parse(phototagUI.interfaces.challengeController.getChallengeData()).appid;
+    phototagAPIInterface.getLeaders(appid, phototagUI.buildLeaderPopup, phototagUI.handleErr);
   },
 
   handleUpdateError() {
     phototagUI.updateNotice('There was an error submitting your score');
+  },
+
+  handleError() {
+    phototagUI.updateNotice('There was an error with the server');
   },
 
   listeners: {

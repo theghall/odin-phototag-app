@@ -364,6 +364,7 @@ body {
   margin: 0;
   margin-bottom: 10px; }
 
+#topten ol,
 #side-board ul {
   list-style: none;
   margin: 0; }
@@ -384,12 +385,19 @@ body {
   position: fixed;
   overflow: auto; }
 
-#popup {
+#submit-popup {
   position: absolute;
   left: 50%;
   top: 17%;
   margin-left: -202px; }
 
+#topten-popup {
+  position: absolute;
+  left: 50%;
+  top: 2%;
+  margin-left: -202px; }
+
+#topten,
 #submit-time {
   max-width: 375px;
   min-width: 250px;
