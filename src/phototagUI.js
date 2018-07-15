@@ -150,7 +150,7 @@ const phototagUI = {
   updateTimer() {
     const timer = document.getElementById(phototagUI.identifiers.timerID);
     timer.textContent = phototagUI.interfaces.challengeController.getTextCurrElapsedTime();
-    if (phototagUI.interfaces.challengeController.getState() !== 'over') {
+    if (!phototagUI.interfaces.challengeController.gameOver()) {
       requestAnimationFrame(phototagUI.updateTimer);
     } else {
       phototagUI.updateNotice();
@@ -296,7 +296,7 @@ const phototagUI = {
       phototagUI.updateNotice();
       phototagUI.updateItemList();
 
-      if (phototagUI.interfaces.challengeController.getState() === 'over') {
+      if (phototagUI.interfaces.challengeController.gameOver()) {
         phototagUI.buildSubmitTimeForm();
         e.target.removeEventListener('click', phototagUI.listeners.handlePicClick);
       }

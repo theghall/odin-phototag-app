@@ -119,6 +119,7 @@ const phototag = {
   phaseable: (state, helpers)  => ({
     getStatus: () => state.gameStatus,
     getState: () => state.phase,
+    gameOver: () => state.phase === 'over',
     start: () => {
       if (state.phase === 'ready') {
         state.phase = 'playing';

@@ -251,7 +251,7 @@ describe('Testing pictureBoard....', () => {
     // Need to do this just before last item is clicked
     performance.now = jest.fn().mockImplementation(function() { return controllerCreated + 5000; });
     controller.clickPicture({x: 2, y: 2});
-    expect(controller.getState()).toMatch('over');
+    expect(controller.gameOver()).toBeTruthy();
     expect(controller.getStatus()).toMatch(/finished/i);
     expect(controller.getStatus()).toMatch(/5\.0/i);
   });
@@ -267,7 +267,7 @@ describe('Testing pictureBoard....', () => {
     controller.start();
     jest.advanceTimersByTime(completedTime);
     controller.clickPicture({x: 2, y: 2});
-    expect(controller.getState()).toMatch('over');
+    expect(controller.gameOver()).toBeTruthy();
     expect(controller.getStatus()).toMatch(/finished/i);
     jest.clearAllTimers()
   });
@@ -282,7 +282,7 @@ describe('Testing pictureBoard....', () => {
     controller.start();
     controller.clickPicture({x: 10, y: 10});
     jest.advanceTimersByTime(challengeTime);
-    expect(controller.getState()).toMatch('over');
+    expect(controller.gameOver()).toBeTruthy();
     expect(controller.getStatus()).toMatch(/failed/i);
   });
 
@@ -312,7 +312,7 @@ describe('Testing pictureBoard....', () => {
     controller.clickPicture({x: 7, y: 7});
     expect(controller.getStatus()).toMatch(/item4/i);
     controller.clickPicture({x: 17, y: 17});
-    expect(controller.getState()).toMatch('over');
+    expect(controller.gameOver()).toBeTruthy();
   });
 
   test('It should throw an error if click is called before game is started', () => {
@@ -328,7 +328,7 @@ describe('Testing pictureBoard....', () => {
     const controller = phototag.createChallengeController(picBoard, getChallengeData("timed", 30000, true));
     controller.start();
     controller.clickPicture({x: 2, y: 2});
-    expect(controller.getState()).toMatch('over');
+    expect(controller.gameOver()).toBeTruthy();
     expect(() => controller.clickPicture({x: 2, y: 2})).toThrow();
   });
 
