@@ -63,7 +63,7 @@ const phototagUI = {
   },
 
   getTimeInSeconds(elapsedTime) {
-    return parseFloat((elapsedTime / 1000 / 10).toFixed(1));
+    return parseFloat((elapsedTime / 1000).toFixed(1));
   },
 
   createWrapperElement(id) {
