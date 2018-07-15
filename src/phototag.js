@@ -186,8 +186,11 @@ const phototag = {
       const seconds = (timeDiff % 60000) / 1000;
       textTime += ':';
       textTime += Math.floor(seconds).toString().padStart(2, '0');
-      const hundreths = Math.round(seconds % 1 * 100);
+      let hundreths = Math.round(seconds % 1 * 100);
       textTime += ':';
+      if (state.phase === 'over' && !state.timedSucess) {
+        hundreths = 0;
+      }
       textTime += hundreths.toString().padStart(2, '0');
       return textTime;
     },
