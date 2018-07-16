@@ -337,15 +337,16 @@ const phototagUI = {
     },
     
     handleSubmitTime(e) {
-      e.preventDefault();
       const form = e.target.parentNode;
-      const initials = form.querySelector('input[name="initials"]');
-      const initialsVal = phototagUI.filterInitials(initials.value.toUpperCase());
-      initials.textContent = initialsVal;
-      const time = phototagUI.getTimeInSeconds(phototagUI.interfaces.challengeController.getElapsedTime());
-      const appid = JSON.parse(phototagUI.interfaces.challengeController.getChallengeData()).appid;
-      phototagAPIInterface.updateLeaderboard(appid, initialsVal, time, phototagUI.handleUpdateSuccess, phototagUI.handleUpdateError);
-      phototagUI.closeModal();
+      if (form.checkValidity()) {
+        const initials = form.querySelector('input[name="initials"]');
+        const initialsVal = phototagUI.filterInitials(initials.value.toUpperCase());
+        initials.textContent = initialsVal;
+        const time = phototagUI.getTimeInSeconds(phototagUI.interfaces.challengeController.getElapsedTime());
+        const appid = JSON.parse(phototagUI.interfaces.challengeController.getChallengeData()).appid;
+        phototagAPIInterface.updateLeaderboard(appid, initialsVal, time, phototagUI.handleUpdateSuccess, phototagUI.handleUpdateError);
+        phototagUI.closeModal();
+      }
     },
 
     handleCloseModal(e) {
