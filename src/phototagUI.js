@@ -242,6 +242,7 @@ const phototagUI = {
     input.setAttribute('type', 'text');
     input.setAttribute('name', 'initials');
     input.setAttribute('required', 'required');
+    input.setAttribute('autofocus','autofocus');
     input.setAttribute('maxlength', '3');
 
     form.appendChild(label);
