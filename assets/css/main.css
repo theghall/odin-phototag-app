@@ -414,6 +414,7 @@ body {
   text-align: center; }
 
 #submit-time input[type=text] {
-  width: 80px; }
+  width: 80px;
+  border-radius: 5px; }
 
 /* ==================== end style.css =========================*/
