@@ -372,6 +372,9 @@ body {
   list-style: none;
   margin: 0; }
 
+#topten ol {
+  padding: 0; }
+
 #pic-board {
   display: grid;
   height: 475px;
@@ -407,7 +410,8 @@ body {
   padding: 10px 50px;
   border: 2px solid gray;
   border-radius: 10px;
-  background-color: #F7C331; }
+  background-color: #F7C331;
+  text-align: center; }
 
 #submit-time input[type=text] {
   width: 80px; }

@@ -109,6 +109,10 @@ body {
   margin: 0;
 }
 
+#topten ol {
+  padding: 0;
+}
+
 #pic-board {
   display: grid;
   height: $picboardHeight;
@@ -150,6 +154,7 @@ body {
   border: 2px solid gray;
   border-radius: 10px;
   background-color: $citrus;
+  text-align: center;
 }
 
 #submit-time input[type=text] {
