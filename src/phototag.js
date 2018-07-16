@@ -189,7 +189,7 @@ const phototag = {
       textTime += Math.floor(seconds).toString().padStart(2, '0');
       let hundreths = Math.round(seconds % 1 * 100);
       textTime += ':';
-      if (state.phase === 'over' && !state.timedSucess) {
+      if (state.phase === 'over' && !state.timedSuccess) {
         hundreths = 0;
       }
       textTime += hundreths.toString().padStart(2, '0');
