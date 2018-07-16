@@ -67,6 +67,18 @@ const phototagUI = {
     return {"top_left_x": 250, "top_left_y": 32}
   },
 
+  getTextTime(elapsedTimeSecs) {
+    let textTime = '';
+    const minutes = Math.floor(elapsedTimeSecs / 60);
+    if (minutes > 0) {
+      textTime += `${minutes}m `;
+    }
+    const seconds = (elapsedTimeSecs % 60)
+    textTime += `${seconds.toString()}s`;
+
+    return textTime;
+  },
+
   getTimeInSeconds(elapsedTime) {
     return parseFloat((elapsedTime / 1000).toFixed(1));
   },
@@ -246,7 +258,8 @@ const phototagUI = {
       const li = document.createElement('li');
       // Lets us create empty slots
       if (i < leaders.length) {
-        li.textContent = leaders[i]["name"] + ' ' + leaders[i]["challenge_time"];
+        const textTime = phototagUI.getTextTime(parseFloat(leaders[i]["challenge_time"]));
+        li.textContent = leaders[i]["name"] + ' ' + textTime;
       }
       ol.appendChild(li);
     }
@@ -359,7 +372,8 @@ const phototagUI = {
       tr.appendChild(phototagUI.createDataCell('td',challenges[i]["name"]));
       tr.childNodes[0].addEventListener('click', phototagUI.listeners.loadChallenge);
       if (challenges[i]["leaderboards"].length > 0) {
-        tr.appendChild(phototagUI.createDataCell('td',challenges[i]["leaderboards"][0].challenge_time));
+        const textTime = phototagUI.getTextTime(parseFloat(challenges[i]["leaderboards"][0].challenge_time));
+        tr.appendChild(phototagUI.createDataCell('td', textTime));
         tr.appendChild(phototagUI.createDataCell('td',challenges[i]["leaderboards"][0].name));
       } else {
         tr.appendChild(phototagUI.createDataCell('td','---'));
