@@ -83,6 +83,17 @@ const phototagUI = {
     return parseFloat((elapsedTime / 1000).toFixed(1));
   },
 
+  filterInitials(initials) {
+    const stops =['ASS', 'TIT', 'FUK'];
+    let filtered = '';
+
+    if (stops.includes(initials)) {
+      filtered = initials.slice(0, 2);
+    }
+
+    return filtered;
+  },
+
   createWrapperElement(id) {
     const div = document.createElement('div');
     div.id = id;
@@ -326,7 +337,7 @@ const phototagUI = {
       e.preventDefault();
       const form = e.target.parentNode;
       const initials = form.querySelector('input[name="initials"]');
-      const initialsVal = initials.value.toUpperCase();
+      const initialsVal = phototagUI.filterInitials(initials.value.toUpperCase());
       initials.textContent = initialsVal;
       const time = phototagUI.getTimeInSeconds(phototagUI.interfaces.challengeController.getElapsedTime());
       const appid = JSON.parse(phototagUI.interfaces.challengeController.getChallengeData()).appid;
