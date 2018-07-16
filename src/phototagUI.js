@@ -74,7 +74,7 @@ const phototagUI = {
       textTime += `${minutes}m `;
     }
     const seconds = (elapsedTimeSecs % 60)
-    textTime += `${seconds.toString()}s`;
+    textTime += `${seconds.toFixed(1)}s`;
 
     return textTime;
   },
