@@ -230,6 +230,7 @@ const phototagUI = {
   },
 
   buildLeaderPopup(leaders) {
+    phototagUI.updateNotice('');
     const displayContainer = phototagUI.createPopupWrapper();
     const popupContainer = phototagUI.createPopup(phototagUI.identifiers.toptenPopupID);
     const topten = phototagUI.createWrapperElement(phototagUI.identifiers.topTenID);
@@ -269,6 +270,7 @@ const phototagUI = {
   handleUpdateSuccess() {
     phototagUI.updateNotice('Your score was successfully submitted');
     const appid = JSON.parse(phototagUI.interfaces.challengeController.getChallengeData()).appid;
+    phototagUI.updateNotice('Fetching top ten list...');
     phototagAPIInterface.getLeaders(appid, phototagUI.buildLeaderPopup, phototagUI.handleErr);
   },
 
