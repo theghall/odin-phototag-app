@@ -7,7 +7,7 @@ const phototagAPIUtils = {
   },
 
   getHostUrl() {
-    return('http://localhost:3000');
+    return('https://tagphoto.herokuapp.com');
   },
 
   buildApiUrl(path, paramHash) {
