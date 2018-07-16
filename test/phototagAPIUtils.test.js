@@ -42,15 +42,16 @@ describe('Testing helpers....', () => {
   test('it should return the correct URL', () => {
     const token = "9931c7c14267f95303df6518c28d8fd6";
     const path = phototagAPIUtils.apiPaths.photoPath;
+    const host = "https://tagphoto.herokuapp.com";
 
     expect(phototagAPIUtils.buildApiUrl(path)).toMatch(
-      `http://localhost:3000${path}?APITOKEN=${token}`);
+      `${host}${path}?APITOKEN=${token}`);
     expect(phototagAPIUtils.buildApiUrl(path, {category: "cat1"})).toMatch(
-      `http://localhost:3000${path}?APITOKEN=${token}&category=cat1`);
+      `${host}${path}?APITOKEN=${token}&category=cat1`);
     expect(phototagAPIUtils.buildApiUrl(path, {category: "cat1", difficulty: "hard"})).toMatch(
-      `http://localhost:3000${path}?APITOKEN=${token}&category=cat1&difficulty=hard`);
+      `${host}${path}?APITOKEN=${token}&category=cat1&difficulty=hard`);
     expect(phototagAPIUtils.buildApiUrl(path, {category: "cat1", difficulty: "hard", number: "1"})).toMatch(
-      `http://localhost:3000${path}?APITOKEN=${token}&category=cat1&difficulty=hard&number=1`);
+      `${host}${path}?APITOKEN=${token}&category=cat1&difficulty=hard&number=1`);
   });
 });
 
@@ -134,7 +135,7 @@ describe('Testing API POST interface...', () => {
     expect.assertions(2);
     const path = phototagAPIUtils.apiPaths.leaderBoardPath;
     const paramsHash = {"appid": "4b10c09f65eb6f5a"};
-    const body = JSON.stringify({ player: { name: "ABC", challenge_time: "5.6" }});
+    const body = JSON.stringify({ leaderboard: { name: "ABC", challenge_time: "5.6" }});
     const payload = phototagAPIUtils.buildPayload(body);
     const handleResp = jest.fn();
     const handleErr = jest.fn();
@@ -148,7 +149,7 @@ describe('Testing API POST interface...', () => {
     expect.assertions(1);
     const path = phototagAPIUtils.apiPaths.leaderBoardPath;
     const paramsHash = {"appid": "4b10c09f65eb6f5a"};
-    const body = JSON.stringify({ player: { name: "ABC", challenge_time: "5.6" }});
+    const body = JSON.stringify({ leaderboard: { name: "ABC", challenge_time: "5.6" }});
     const handleResp = jest.fn().mockImplementation(function (response) {
       expect(response.status).toBe(201);
       done();
@@ -163,7 +164,7 @@ describe('Testing API POST interface...', () => {
   test('it should handle a timeout response', (done) => {
     const path = phototagAPIUtils.apiPaths.leaderBoardPath;
     const paramsHash = {"appid": "4b10c09f65eb6f5a"};
-    const body = JSON.stringify({ player: { name: "ABC", challenge_time: "5.6" }});
+    const body = JSON.stringify({ leaderboard: { name: "ABC", challenge_time: "5.6" }});
     const handleResp = jest.fn();
     const handleErr = jest.fn().mockImplementation(function (error) {
       expect(error).toMatch('Photo server took too long to respond.');
@@ -183,7 +184,7 @@ describe('Testing API POST interface...', () => {
     expect.assertions(1);
     const path = phototagAPIUtils.apiPaths.leaderBoardPath;
     const paramsHash = {"appid": "4b10c09f65eb6f5a"};
-    const body = JSON.stringify({ player: { name: "ABC", challenge_time: "5.6" }});
+    const body = JSON.stringify({ leaderboard: { name: "ABC", challenge_time: "5.6" }});
     const error = '[{"code": 400, "errors": ["bad request"]}]';
     const handleResp = jest.fn().mockImplementation(function (response) {
       // If this is called then test will fail since done() is not called
