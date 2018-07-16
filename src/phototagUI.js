@@ -89,6 +89,8 @@ const phototagUI = {
 
     if (stops.includes(initials)) {
       filtered = initials.slice(0, 2);
+    } else {
+      filtered = initials;
     }
 
     return filtered;
