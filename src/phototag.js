@@ -4,7 +4,7 @@ const phototag = {
   }),
 
   clickableItem: (state, helpers) => ({
-    click: (coords) => {
+    click: coords => {
       if (!state.clicked) {
         state.clicked = helpers.coords_within_rect(coords, state, helpers);
       }
@@ -14,14 +14,14 @@ const phototag = {
       if (helpers.coords_within_rect(coords, state, helpers)) {
         return state.name;
       } else {
-        return("");
+        return '';
       }
-    }
+    },
   }),
 
   itemHelpers: {
     coords_within_rect(coords, state, helpers) {
-      const {x, y} = coords;
+      const { x, y } = coords;
 
       const leftX = helpers.getXY(state.top_left_loc).x;
       const rightX = helpers.getXY(state.bottom_right_loc).x;
@@ -29,17 +29,15 @@ const phototag = {
       const topY = helpers.getXY(state.top_left_loc).y;
 
       return x > leftX && x < rightX && y > topY && y < bottomY;
-
     },
 
     getXY(loc) {
-      const locArr = loc.split(",");
+      const locArr = loc.split(',');
 
       const x = parseInt(locArr[0], 10);
       const y = parseInt(locArr[1], 10);
 
-
-      return {"x": x, "y": y}
+      return { x: x, y: y };
     },
   },
 
@@ -48,24 +46,34 @@ const phototag = {
       name: item.name,
       top_left_loc: item.top_left_loc,
       bottom_right_loc: item.bottom_right_loc,
-      clicked: false
+      clicked: false,
     };
 
-    return Object.assign({}, phototag.nameable(state), phototag.clickableItem(state, phototag.itemHelpers));
+    return Object.assign(
+      {},
+      phototag.nameable(state),
+      phototag.clickableItem(state, phototag.itemHelpers)
+    );
   },
 
   itemable: state => ({
-    addItem: (item) => { state.items.push(item);},
-    getItem: (index) => { return Object.assign({},state.items[index]); },
-    getItemList: () => {return state.items.map(item => item.getName()); },
-  }), 
+    addItem: item => {
+      state.items.push(item);
+    },
+    getItem: index => {
+      return Object.assign({}, state.items[index]);
+    },
+    getItemList: () => {
+      return state.items.map(item => item.getName());
+    },
+  }),
 
   clickableBoard: (state, helpers) => ({
-    click: (coords) => {
+    click: coords => {
       let itemClicked = null;
 
       for (let i = 0; i < state.items.length; i += 1) {
-        state.items[i].click(coords)
+        state.items[i].click(coords);
         if (state.items[i].clicked()) {
           itemClicked = state.items[i].getName();
           helpers.updateItemsClicked(itemClicked, state);
@@ -77,7 +85,7 @@ const phototag = {
     },
     getItemsClicked: () => state.itemsClicked.toString(),
     allItemsClicked: () => state.allItemsClicked,
-    getNameOfClicked: (coords) => {
+    getNameOfClicked: coords => {
       let name = '';
       for (let i = 0; i < state.items.length; i += 1) {
         name = state.items[i].getNameOfClicked(coords);
@@ -95,7 +103,7 @@ const phototag = {
         state.itemsClicked.push(itemName);
       }
     },
-    updateAllItemsClicked: (state) => {
+    updateAllItemsClicked: state => {
       const clicked = [];
 
       for (let i = 0; i < state.items.length; i += 1) {
@@ -105,18 +113,22 @@ const phototag = {
       state.allItemsClicked = !clicked.includes(false);
     },
   },
-      
+
   createPictureBoard() {
     const state = {
       items: [],
       itemsClicked: [],
-      allItemsClicked: false
-    }
+      allItemsClicked: false,
+    };
 
-    return Object.assign({}, phototag.itemable(state), phototag.clickableBoard(state, phototag.boardHelpers));
+    return Object.assign(
+      {},
+      phototag.itemable(state),
+      phototag.clickableBoard(state, phototag.boardHelpers)
+    );
   },
 
-  phaseable: (state, helpers)  => ({
+  phaseable: (state, helpers) => ({
     getStatus: () => state.gameStatus,
     getState: () => state.phase,
     gameOver: () => state.phase === 'over',
@@ -124,39 +136,41 @@ const phototag = {
       if (state.phase === 'ready') {
         state.phase = 'playing';
         if (state.directedArray !== null) {
-          state.gameStatus = "Find " + `${state.directedArray[0]}`;
+          state.gameStatus = 'Find ' + `${state.directedArray[0]}`;
         } else {
           state.gameStatus = 'Click on objects and/or people';
         }
         state.timeStart = performance.now();
       } else {
-        throw('Start called before controller is ready');
+        throw 'Start called before controller is ready';
       }
     },
-    addPicboard: (picboard) => {
+    addPicboard: picboard => {
       state.picBoard = picboard;
       state.phase = 'ready';
       state.gameStatus = 'ready';
 
       const meta_data = JSON.parse(JSON.parse(state.challenge).meta_data);
       if (meta_data.directed) {
-        helpers.createDirectedArray(state)
+        helpers.createDirectedArray(state);
       }
     },
     getChallengeData: () => state.challenge,
   }),
 
   playable: state => ({
-    clickPicture: (coords) => {
+    clickPicture: coords => {
       if (state.phase !== 'playing') {
-        throw('Clicked was called when game was not being played');
+        throw 'Clicked was called when game was not being played';
       }
 
       // Only mark item clicked if it is what is being asked for
       if (state.directedArray !== null) {
-        if (state.picBoard.getNameOfClicked(coords) === state.directedArray[0]) {
+        if (
+          state.picBoard.getNameOfClicked(coords) === state.directedArray[0]
+        ) {
           state.picBoard.click(coords);
-          state.directedArray.splice(0,1);
+          state.directedArray.splice(0, 1);
           state.gameStatus = 'Find ' + `${state.directedArray[0]}`;
         }
       } else {
@@ -166,7 +180,9 @@ const phototag = {
       if (state.picBoard.allItemsClicked()) {
         state.elapsedTime = performance.now() - state.timeStart;
         state.phase = 'over';
-        state.gameStatus = `You finished in ${(state.elapsedTime/1000).toFixed(1)} seconds`
+        state.gameStatus = `You finished in ${(
+          state.elapsedTime / 1000
+        ).toFixed(1)} seconds`;
 
         if (state.challengeTime !== null) {
           state.timedSuccess = true;
@@ -186,8 +202,10 @@ const phototag = {
       textTime += minutes.toString().padStart(2, '0');
       const seconds = (timeDiff % 60000) / 1000;
       textTime += ':';
-      textTime += Math.floor(seconds).toString().padStart(2, '0');
-      let hundreths = Math.round(seconds % 1 * 100);
+      textTime += Math.floor(seconds)
+        .toString()
+        .padStart(2, '0');
+      let hundreths = Math.round((seconds % 1) * 100);
       textTime += ':';
       if (state.phase === 'over' && !state.timedSuccess) {
         hundreths = 0;
@@ -195,26 +213,24 @@ const phototag = {
       textTime += hundreths.toString().padStart(2, '0');
       return textTime;
     },
-    
   }),
 
-  timed: (state) => (
-    state.timerID = setTimeout(function() { 
+  timed: state =>
+    (state.timerID = setTimeout(function() {
       state.phase = 'over';
       state.timedSuccess = false;
       state.elapsedTime = state.challengeTime;
       state.gameStatus = 'You failed to complete the challenge on time';
-    },
-    state.challengeTime)
-  ),
+    }, state.challengeTime)),
 
   challengeHelpers: {
     createDirectedArray(state) {
       // Grabbed from StackOverflow, Schwartzian transform
-      state.directedArray = state.picBoard.getItemList()
-        .map((a) => ({sort: Math.random(), value: a}))
+      state.directedArray = state.picBoard
+        .getItemList()
+        .map(a => ({ sort: Math.random(), value: a }))
         .sort((a, b) => a.sort - b.sort)
-        .map((a) => a.value);
+        .map(a => a.value);
     },
   },
 
@@ -233,28 +249,34 @@ const phototag = {
       challengeTime: null,
       timerID: null,
       timedSuccess: false,
-      directedArray: null
-    }
+      directedArray: null,
+    };
 
-    state.phase = (picBoard === null ? 'created' : 'ready');
-    state.gameStatus = (picBoard === null ? 'Created' : 'ready');
+    state.phase = picBoard === null ? 'created' : 'ready';
+    state.gameStatus = picBoard === null ? 'Created' : 'ready';
 
     if (picBoard !== null && meta_data.directed) {
-      phototag.challengeHelpers.createDirectedArray(state)
+      phototag.challengeHelpers.createDirectedArray(state);
     }
 
     if (timedChallenge) {
       state.challengeTime = meta_data.ctime;
-      controller = Object.assign({}, phototag.phaseable(state, phototag.challengeHelpers), phototag.playable(state), phototag.timed(state));
+      controller = Object.assign(
+        {},
+        phototag.phaseable(state, phototag.challengeHelpers),
+        phototag.playable(state),
+        phototag.timed(state)
+      );
     } else {
-      controller = Object.assign({}, phototag.phaseable(state, phototag.challengeHelpers), phototag.playable(state));
+      controller = Object.assign(
+        {},
+        phototag.phaseable(state, phototag.challengeHelpers),
+        phototag.playable(state)
+      );
     }
 
     return controller;
-
   },
-
 };
 
 module.exports = phototag;
-

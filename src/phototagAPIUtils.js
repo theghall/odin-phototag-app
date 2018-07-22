@@ -1,13 +1,12 @@
-
 const phototagAPIUtils = {
   apiPaths: {
     photoPath: '/api/v1/photos',
     leaderBoardPath: '/api/v1/leaderboards',
-    challengePath: '/api/v1/challenges'
+    challengePath: '/api/v1/challenges',
   },
 
   getHostUrl() {
-    return('https://tagphoto.herokuapp.com');
+    return 'https://tagphoto.herokuapp.com';
   },
 
   buildApiUrl(path, paramHash) {
@@ -25,7 +24,7 @@ const phototagAPIUtils = {
 
     try {
       response = await fetch(phototagAPIUtils.buildApiUrl(path, paramHash));
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
 
@@ -45,7 +44,10 @@ const phototagAPIUtils = {
       }, 20000);
     });
 
-    const apiRequest = Promise.race([phototagAPIUtils.doAPIGet(path, paramsHash), timeoutPromise]);
+    const apiRequest = Promise.race([
+      phototagAPIUtils.doAPIGet(path, paramsHash),
+      timeoutPromise,
+    ]);
 
     apiRequest.then(
       response => {
@@ -59,7 +61,11 @@ const phototagAPIUtils = {
 
   buildPayload(body) {
     const jsonBody = JSON.stringify(body);
-    return { "method" : "POST", "headers": { "Content-Type": "application/json; charset=utf-8" }, "body": jsonBody};
+    return {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: jsonBody,
+    };
   },
 
   async doAPIPost(path, paramHash, body) {
@@ -68,8 +74,11 @@ const phototagAPIUtils = {
     const payload = phototagAPIUtils.buildPayload(body);
 
     try {
-      response = await fetch(phototagAPIUtils.buildApiUrl(path, paramHash), payload);
-    } catch(err) {
+      response = await fetch(
+        phototagAPIUtils.buildApiUrl(path, paramHash),
+        payload
+      );
+    } catch (err) {
       return Promise.reject(err);
     }
 
@@ -89,7 +98,10 @@ const phototagAPIUtils = {
       }, 20000);
     });
 
-    const apiRequest = Promise.race([phototagAPIUtils.doAPIPost(path, paramsHash, body), timeoutPromise]);
+    const apiRequest = Promise.race([
+      phototagAPIUtils.doAPIPost(path, paramsHash, body),
+      timeoutPromise,
+    ]);
 
     apiRequest.then(
       response => {

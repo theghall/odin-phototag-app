@@ -3,29 +3,52 @@ const phototagAPI = require('./phototagAPIUtils');
 
 const phototagAPIInterface = {
   getChallenges(displayCallback, errorCallback) {
-    phototagAPI.makeAPIGetRequest(phototagAPI.apiPaths.challengePath, {}, displayCallback, errorCallback);
+    phototagAPI.makeAPIGetRequest(
+      phototagAPI.apiPaths.challengePath,
+      {},
+      displayCallback,
+      errorCallback
+    );
   },
 
   getPhotoInfo(image, displayCallback, errorCallback) {
-    phototagAPI.makeAPIGetRequest(phototagAPI.apiPaths.photoPath, {image_filename: `${image}`}, displayCallback, errorCallback);
+    phototagAPI.makeAPIGetRequest(
+      phototagAPI.apiPaths.photoPath,
+      { image_filename: `${image}` },
+      displayCallback,
+      errorCallback
+    );
   },
 
   updateLeaderboard(appid, initials, time, displayCallback, errorCallback) {
-    const paramsHash = {appid: `${appid}`};
-    const payload = { leaderboard: { name: `${initials}`, challenge_time: `${time}` }};
-    phototagAPI.makeAPIPostRequest(phototagAPI.apiPaths.leaderBoardPath, paramsHash, payload, displayCallback, errorCallback);
+    const paramsHash = { appid: `${appid}` };
+    const payload = {
+      leaderboard: { name: `${initials}`, challenge_time: `${time}` },
+    };
+    phototagAPI.makeAPIPostRequest(
+      phototagAPI.apiPaths.leaderBoardPath,
+      paramsHash,
+      payload,
+      displayCallback,
+      errorCallback
+    );
   },
 
   getLeaders(appid, displayCallback, errorCallback) {
-    const paramsHash = {appid: `${appid}`};
-    phototagAPI.makeAPIGetRequest(phototagAPI.apiPaths.leaderBoardPath, paramsHash, displayCallback, errorCallback);
+    const paramsHash = { appid: `${appid}` };
+    phototagAPI.makeAPIGetRequest(
+      phototagAPI.apiPaths.leaderBoardPath,
+      paramsHash,
+      displayCallback,
+      errorCallback
+    );
   },
 };
 
 const phototagUI = {
   interfaces: {
     picBoard: null,
-    challengeController: null
+    challengeController: null,
   },
 
   resetInterfaces() {
@@ -56,7 +79,7 @@ const phototagUI = {
   },
 
   appName() {
-    return "Identicize";
+    return 'Identicize';
   },
 
   getRootElement() {
@@ -64,7 +87,7 @@ const phototagUI = {
   },
 
   getXYTopLeftPic() {
-    return {"top_left_x": 250, "top_left_y": 32}
+    return { top_left_x: 250, top_left_y: 32 };
   },
 
   getTextTime(elapsedTimeSecs) {
@@ -73,7 +96,7 @@ const phototagUI = {
     if (minutes > 0) {
       textTime += `${minutes}m `;
     }
-    const seconds = (elapsedTimeSecs % 60)
+    const seconds = elapsedTimeSecs % 60;
     textTime += `${seconds.toFixed(1)}s`;
 
     return textTime;
@@ -84,7 +107,7 @@ const phototagUI = {
   },
 
   filterInitials(initials) {
-    const stops =['ASS', 'TIT', 'FUK'];
+    const stops = ['ASS', 'TIT', 'FUK'];
     let filtered = '';
 
     if (stops.includes(initials)) {
@@ -103,7 +126,9 @@ const phototagUI = {
   },
 
   createTitleBanner() {
-    const title = phototagUI.createWrapperElement(phototagUI.identifiers.appTitleID);
+    const title = phototagUI.createWrapperElement(
+      phototagUI.identifiers.appTitleID
+    );
     title.textContent = phototagUI.appName();
     return title;
   },
@@ -116,7 +141,9 @@ const phototagUI = {
   },
 
   createPopupWrapper() {
-    const container = phototagUI.createWrapperElement(phototagUI.identifiers.popupWrapperID);
+    const container = phototagUI.createWrapperElement(
+      phototagUI.identifiers.popupWrapperID
+    );
     container.classList.add('block');
     return container;
   },
@@ -155,8 +182,8 @@ const phototagUI = {
   createPicboard(photo) {
     const picboard = phototag.createPictureBoard();
 
-    for (let i = 0; i < photo[0]["items"].length; i += 1) {
-      picboard.addItem(phototag.createItem(photo[0]["items"][i]));
+    for (let i = 0; i < photo[0]['items'].length; i += 1) {
+      picboard.addItem(phototag.createItem(photo[0]['items'][i]));
     }
 
     return picboard;
@@ -164,7 +191,9 @@ const phototagUI = {
 
   initInterfaces(photo) {
     phototagUI.interfaces.picBoard = phototagUI.createPicboard(photo);
-    phototagUI.interfaces.challengeController.addPicboard(phototagUI.interfaces.picBoard);
+    phototagUI.interfaces.challengeController.addPicboard(
+      phototagUI.interfaces.picBoard
+    );
   },
 
   linkPhoto(image_filename) {
@@ -197,10 +226,12 @@ const phototagUI = {
   },
 
   updateItemList() {
-    const itemsClicked = phototagUI.interfaces.picBoard.getItemsClicked().split(',');
+    const itemsClicked = phototagUI.interfaces.picBoard
+      .getItemsClicked()
+      .split(',');
 
     const ul = document.getElementById(phototagUI.identifiers.itemListID);
-   
+
     while (ul.firstChild) {
       ul.removeChild(ul.firstChild);
     }
@@ -219,7 +250,7 @@ const phototagUI = {
 
   handlePhotoResponse(photo) {
     phototagUI.initInterfaces(photo);
-    phototagUI.updatePicboard(photo[0]["image_filename"]);
+    phototagUI.updatePicboard(photo[0]['image_filename']);
     requestAnimationFrame(phototagUI.updateTimer);
     phototagUI.interfaces.challengeController.start();
     phototagUI.updateNotice();
@@ -228,11 +259,13 @@ const phototagUI = {
 
   buildSubmitTimeForm() {
     const displayContainer = phototagUI.createPopupWrapper();
-    const popupContainer = phototagUI.createPopup(phototagUI.identifiers.submitPopupID);
+    const popupContainer = phototagUI.createPopup(
+      phototagUI.identifiers.submitPopupID
+    );
 
     const form = document.createElement('form');
     form.id = phototagUI.identifiers.submitTimeID;
-    form.setAttribute('action', "#");
+    form.setAttribute('action', '#');
 
     const label = document.createElement('label');
     label.setAttribute('for', 'initials');
@@ -242,7 +275,7 @@ const phototagUI = {
     input.setAttribute('type', 'text');
     input.setAttribute('name', 'initials');
     input.setAttribute('required', 'required');
-    input.setAttribute('autofocus','autofocus');
+    input.setAttribute('autofocus', 'autofocus');
     input.setAttribute('maxlength', '3');
 
     form.appendChild(label);
@@ -258,12 +291,15 @@ const phototagUI = {
   buildLeaderPopup(leaders) {
     phototagUI.updateNotice('');
     const displayContainer = phototagUI.createPopupWrapper();
-    const popupContainer = phototagUI.createPopup(phototagUI.identifiers.toptenPopupID);
-    const topten = phototagUI.createWrapperElement(phototagUI.identifiers.topTenID);
-
+    const popupContainer = phototagUI.createPopup(
+      phototagUI.identifiers.toptenPopupID
+    );
+    const topten = phototagUI.createWrapperElement(
+      phototagUI.identifiers.topTenID
+    );
 
     const p = document.createElement('p');
-    p.textContent = "Top Ten for this challenge";
+    p.textContent = 'Top Ten for this challenge';
 
     const ol = document.createElement('ol');
 
@@ -272,8 +308,10 @@ const phototagUI = {
       const li = document.createElement('li');
       // Lets us create empty slots
       if (i < leaders.length) {
-        const textTime = phototagUI.getTextTime(parseFloat(leaders[i]["challenge_time"]));
-        li.textContent = leaders[i]["name"] + ' ' + textTime;
+        const textTime = phototagUI.getTextTime(
+          parseFloat(leaders[i]['challenge_time'])
+        );
+        li.textContent = leaders[i]['name'] + ' ' + textTime;
       }
       ol.appendChild(li);
     }
@@ -282,23 +320,31 @@ const phototagUI = {
     topten.appendChild(ol);
     topten.appendChild(phototagUI.createCloseModal());
 
-    popupContainer.appendChild(topten)
+    popupContainer.appendChild(topten);
     displayContainer.appendChild(popupContainer);
     phototagUI.getRootElement().appendChild(displayContainer);
   },
 
   closeModal() {
     const rootElement = phototagUI.getRootElement();
-    const wrapper = document.getElementById(phototagUI.identifiers.popupWrapperID);
+    const wrapper = document.getElementById(
+      phototagUI.identifiers.popupWrapperID
+    );
 
     rootElement.removeChild(wrapper);
   },
 
   handleUpdateSuccess() {
     phototagUI.updateNotice('Your score was successfully submitted');
-    const appid = JSON.parse(phototagUI.interfaces.challengeController.getChallengeData()).appid;
+    const appid = JSON.parse(
+      phototagUI.interfaces.challengeController.getChallengeData()
+    ).appid;
     phototagUI.updateNotice('Fetching top ten list...');
-    phototagAPIInterface.getLeaders(appid, phototagUI.buildLeaderPopup, phototagUI.handleErr);
+    phototagAPIInterface.getLeaders(
+      appid,
+      phototagUI.buildLeaderPopup,
+      phototagUI.handleErr
+    );
   },
 
   handleUpdateError() {
@@ -314,37 +360,62 @@ const phototagUI = {
       const td = e.target.parentNode;
       const image = td.childNodes[3].textContent;
       const challengeData = td.childNodes[4].textContent;
-      phototagUI.interfaces.challengeController = phototag.createChallengeController(null, challengeData);
+      phototagUI.interfaces.challengeController = phototag.createChallengeController(
+        null,
+        challengeData
+      );
       phototagUI.buildChallengePage();
-      phototagAPIInterface.getPhotoInfo(image, phototagUI.handlePhotoResponse, phototagUI.handleErr);
+      phototagAPIInterface.getPhotoInfo(
+        image,
+        phototagUI.handlePhotoResponse,
+        phototagUI.handleErr
+      );
     },
 
     handlePicClick(e) {
-      const {top_left_x, top_left_y} = phototagUI.getXYTopLeftPic();
+      const { top_left_x, top_left_y } = phototagUI.getXYTopLeftPic();
       // Adjust for offset from left and top
       const x = e.clientX - top_left_x;
       const y = e.clientY - top_left_y;
 
-      phototagUI.interfaces.challengeController.clickPicture({x: `${x}`, y: `${y}`});
+      phototagUI.interfaces.challengeController.clickPicture({
+        x: `${x}`,
+        y: `${y}`,
+      });
 
       phototagUI.updateNotice();
       phototagUI.updateItemList();
 
       if (phototagUI.interfaces.challengeController.gameOver()) {
         phototagUI.buildSubmitTimeForm();
-        e.target.removeEventListener('click', phototagUI.listeners.handlePicClick);
+        e.target.removeEventListener(
+          'click',
+          phototagUI.listeners.handlePicClick
+        );
       }
     },
-    
+
     handleSubmitTime(e) {
       const form = e.target.parentNode;
       if (form.checkValidity()) {
         const initials = form.querySelector('input[name="initials"]');
-        const initialsVal = phototagUI.filterInitials(initials.value.toUpperCase());
+        const initialsVal = phototagUI.filterInitials(
+          initials.value.toUpperCase()
+        );
         initials.textContent = initialsVal;
-        const time = phototagUI.getTimeInSeconds(phototagUI.interfaces.challengeController.getElapsedTime());
-        const appid = JSON.parse(phototagUI.interfaces.challengeController.getChallengeData()).appid;
-        phototagAPIInterface.updateLeaderboard(appid, initialsVal, time, phototagUI.handleUpdateSuccess, phototagUI.handleUpdateError);
+        const time = phototagUI.getTimeInSeconds(
+          phototagUI.interfaces.challengeController.getElapsedTime()
+        );
+        const appid = JSON.parse(
+          phototagUI.interfaces.challengeController.getChallengeData()
+        ).appid;
+        phototagAPIInterface.updateLeaderboard(
+          appid,
+          initialsVal,
+          time,
+          phototagUI.handleUpdateSuccess,
+          phototagUI.handleUpdateError
+        );
         phototagUI.closeModal();
       }
     },
@@ -384,19 +455,30 @@ const phototagUI = {
 
     for (let i = 0; i < challenges.length; i += 1) {
       const tr = document.createElement('tr');
-      tr.appendChild(phototagUI.createDataCell('td',challenges[i]["name"]));
-      tr.childNodes[0].addEventListener('click', phototagUI.listeners.loadChallenge);
-      if (challenges[i]["leaderboards"].length > 0) {
-        const textTime = phototagUI.getTextTime(parseFloat(challenges[i]["leaderboards"][0].challenge_time));
+      tr.appendChild(phototagUI.createDataCell('td', challenges[i]['name']));
+      tr.childNodes[0].addEventListener(
+        'click',
+        phototagUI.listeners.loadChallenge
+      );
+      if (challenges[i]['leaderboards'].length > 0) {
+        const textTime = phototagUI.getTextTime(
+          parseFloat(challenges[i]['leaderboards'][0].challenge_time)
+        );
         tr.appendChild(phototagUI.createDataCell('td', textTime));
-        tr.appendChild(phototagUI.createDataCell('td',challenges[i]["leaderboards"][0].name));
+        tr.appendChild(
+          phototagUI.createDataCell('td', challenges[i]['leaderboards'][0].name)
+        );
       } else {
-        tr.appendChild(phototagUI.createDataCell('td','---'));
-        tr.appendChild(phototagUI.createDataCell('td','---'));
+        tr.appendChild(phototagUI.createDataCell('td', '---'));
+        tr.appendChild(phototagUI.createDataCell('td', '---'));
       }
-      tr.appendChild(phototagUI.createDataCell('td',challenges[i].photo_name, true));
-      delete challenges[i]["leaderboards"];
-      tr.appendChild(phototagUI.createDataCell('td', JSON.stringify(challenges[i]), true));
+      tr.appendChild(
+        phototagUI.createDataCell('td', challenges[i].photo_name, true)
+      );
+      delete challenges[i]['leaderboards'];
+      tr.appendChild(
+        phototagUI.createDataCell('td', JSON.stringify(challenges[i]), true)
+      );
       tbody.appendChild(tr);
     }
     table.appendChild(tbody);
@@ -417,11 +499,16 @@ const phototagUI = {
   },
 
   requestChallenges() {
-    phototagAPIInterface.getChallenges(phototagUI.addChallengeMenu, phototagUI.handleFetchErr);
+    phototagAPIInterface.getChallenges(
+      phototagUI.addChallengeMenu,
+      phototagUI.handleFetchErr
+    );
   },
 
   createSideboard(challenge) {
-    const sideboard = phototagUI.createWrapperElement(phototagUI.identifiers.sideboardID);
+    const sideboard = phototagUI.createWrapperElement(
+      phototagUI.identifiers.sideboardID
+    );
     const infoWrapper = document.createElement('div');
     // Challenge name
     let p = document.createElement('p');
@@ -459,25 +546,37 @@ const phototagUI = {
 
   createMainboard() {
     // mainboard
-    const mainboard = phototagUI.createWrapperElement(phototagUI.identifiers.mainBoardID);
-    const picboard = phototagUI.createWrapperElement(phototagUI.identifiers.picboardID);
+    const mainboard = phototagUI.createWrapperElement(
+      phototagUI.identifiers.mainBoardID
+    );
+    const picboard = phototagUI.createWrapperElement(
+      phototagUI.identifiers.picboardID
+    );
     picboard.appendChild(phototagUI.createFetchingNotice('challenge photo'));
     const img = document.createElement('img');
     img.id = phototagUI.identifiers.photoID;
     img.addEventListener('click', phototagUI.listeners.handlePicClick);
     picboard.appendChild(img);
     mainboard.appendChild(picboard);
-    mainboard.appendChild(phototagUI.createWrapperElement(phototagUI.identifiers.noticeID));
+    mainboard.appendChild(
+      phototagUI.createWrapperElement(phototagUI.identifiers.noticeID)
+    );
 
     return mainboard;
   },
 
   buildChallengePage() {
     phototagUI.removeElement(phototagUI.identifiers.menuPageID);
-    const challenge = JSON.parse(phototagUI.interfaces.challengeController.getChallengeData());
+    const challenge = JSON.parse(
+      phototagUI.interfaces.challengeController.getChallengeData()
+    );
     const rootElement = phototagUI.getRootElement();
-    const challengePage = phototagUI.createWrapperElement(phototagUI.identifiers.challengePageID);
-    const displayBoard = phototagUI.createWrapperElement(phototagUI.identifiers.displayBoardID);
+    const challengePage = phototagUI.createWrapperElement(
+      phototagUI.identifiers.challengePageID
+    );
+    const displayBoard = phototagUI.createWrapperElement(
+      phototagUI.identifiers.displayBoardID
+    );
     displayBoard.appendChild(phototagUI.createSideboard(challenge));
     displayBoard.appendChild(phototagUI.createMainboard());
     challengePage.appendChild(displayBoard);
@@ -486,7 +585,9 @@ const phototagUI = {
 
   buildMenuPage() {
     const rootElement = phototagUI.getRootElement();
-    const menuPage = phototagUI.createWrapperElement(phototagUI.identifiers.menuPageID);
+    const menuPage = phototagUI.createWrapperElement(
+      phototagUI.identifiers.menuPageID
+    );
     rootElement.appendChild(menuPage);
     menuPage.appendChild(phototagUI.createFetchingNotice('challenges'));
     phototagUI.requestChallenges();
@@ -496,7 +597,7 @@ const phototagUI = {
     const rootElement = phototagUI.getRootElement();
     rootElement.appendChild(phototagUI.createTitleBanner());
     phototagUI.buildMenuPage();
-  }
+  },
 };
 
 module.exports = phototagUI;
